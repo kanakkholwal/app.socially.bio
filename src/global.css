@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+
+        --primary: 261.9deg 84.75% 53.73%;
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+
+        --radius: 0.5rem;
+        /* custom */
+        --body-color: rgb(96, 105, 123);
+        --body-bg-rgb: 244, 247, 254;
+        --body-bg: rgba(var(--body-bg-rgb), 1);
+        --dense-bg: rgb(246, 247, 249);
+        --hover-bg: rgba(145, 158, 171, 0.08);
+        --muted-rgb: 163 174 208;
+        --text-muted: rgba(var(--muted-rgb), 1);
+        --card-bg-rgb: 255, 255, 255;
+        --card-bg: rgba(var(--card-bg-rgb), 1);
+        --card-shadow-single: rgba(130, 163, 196, 0.24) 3px 3px 12px 0px;
+        --card-shadow: rgba(130, 163, 196, 0.24) 3px -3px 12px 0px, rgb(142 165 189 / 10%) -5px 5px 10px 0px;
+        --shadow-position-1: 3px -3px 12px 0px;
+        --shadow-position-2: -5px 5px 10px 0px;
+        --body-font: 'Poppins', 'Inter', "ManRope", "Google Sans", san-serif;
+        --code-font: "Fira Code", "Google Sans Mono", "Source Code Pro", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        --drop-bg: hsl(0, 0%, 97%);
+        --border-color: #8386972b;
+        --code-color: #242424;
+        --code-bg: #e4eaef;
+        --icon-bg: #8386972b;
+        --theme: hsl(196, 100%, 40%);
+        --open-transition: opacity .15s cubic-bezier(0, 0, .2, 1) 0ms, transform .15s cubic-bezier(0, 0, .2, 1) 0ms, -webkit-transform .15s cubic-bezier(0, 0, .2, 1) 0ms;
+        --drop-shadow: rgb(145 158 171 / 24%) 0px 0px 2px 0px, rgb(145 158 171 / 24%) -20px 20px 40px -4px;
+        --drop-shadow-hover: rgba(130, 163, 196, 0.24) 0px 0px 2px 0px, rgba(142, 165, 189, 0.24) -20px 20px 40px -4px;
+
+        --dropdown-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+        --badge: hsl(235, 22%, 34%);
+        --badge-text: rgb(85, 85, 85, 1);
+        --badge-bg: #F8F9FC;
+        --badge-border: #D5D9EB;
+        --cubic-transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        --max-width: 1400px;
+        --sidenav-width: 300px;
+        --border-radius: 12px;
+        --font-mono: 'Fira Code', ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
+            'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
+            'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+        --font-body: 'Euclid Circular A', 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        --shadow: 0 0 .5rem rgb(0 0 0 / 10%);
+        --theme-opacity: 1;
+        --grey-rgb: 102, 112, 133;
+        --theme-rgb: 37, 99, 235;
+        --theme: rgba(var(--theme-rgb), var(--theme-opacity));
+        --primary-rgb: 0, 150, 204;
+        --primary: rgba(var(--primary-rgb), var(--theme-opacity));
+        --secondary-rgb: 128, 47, 222;
+        --secondary: rgba(var(--secondary-rgb), var(--theme-opacity));
+        --success-rgb: 15, 133, 100;
+        --success: rgba(var(--success-rgb), var(--theme-opacity));
+        --danger-rgb: 229, 69, 69;
+        --danger: rgba(var(--danger-rgb), var(--theme-opacity));
+        --info-rgb: 0, 127, 167;
+        --info: rgba(var(--info-rgb), var(--theme-opacity));
+        --warning-rgb: 255, 136, 0;
+        --warning: rgba(var(--warning-rgb), var(--theme-opacity));
+        --dark-rgb: 40, 40, 40;
+        --dark: rgba(var(--dark-rgb), var(--theme-opacity));
+        --light-rgb: 251, 251, 251;
+        --light: rgba(var(--light-rgb), var(--theme-opacity));
+        --mute-bg-rgb: 244, 246, 248;
+        --mute-rgb: 52, 64, 84;
+        --text-opacity: 1;
+        --text-rgb: 33, 43, 54;
+        --text-color: rgba(var(--text-rgb), var(--theme-opacity));
+        --muted-color: rgb(var(--mute-rgb), 0.8);
+
+    }
+
+    .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*:autofill {
+    font: inherit;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: #fafafa;
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background-color: #b3b3b3;
+}
+
+body {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+    z-index: 1;
+    font-family: "Plus Jakarta Sans", 'Poppins', 'Inter', "ManRope", "Google Sans", san-serif;
+    background: var(--body-bg);
+    color: var(--body-color);
+}
