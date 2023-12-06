@@ -1,0 +1,195 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import { useState } from "react";
+// import { FaApple } from "react-icons/fa";
+import { CgSpinner } from "react-icons/cg";
+import { FcGoogle } from "react-icons/fc";
+import { LuCheckCircle2 } from "react-icons/lu";
+import { RiErrorWarningLine } from "react-icons/ri";
+
+
+interface Props {
+    validateEmail: (email: string) => Promise<boolean>,
+    validateUsername: (username: string) => Promise<boolean>,
+}
+const INVALID_CHARACTERS = [" ", "-", "@", "#", "%", "^", "!", "~", "*", "(", ")", "=", "+", ".", ">", ",", "<", "?", `"`, `'`, "{", "}", "[", "]", "|", "$", ":", ";", "&"]
+
+export function RegisterForm({ validateEmail, validateUsername }: Props) {
+    
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [validity, setValidity] = useState({
+        email: {
+            loading: false,
+            valid: false,
+        },
+        username: {
+            loading: false,
+            valid: false,
+        },
+        password: false
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    return (<>
+        <div className="grid w-full max-w-lg items-center gap-1.5">
+            <Label htmlFor="email">Enter your Email</Label>
+            <div className="relative">
+                <Input type="email" id="email" placeholder="e.g. johndoe@gmail.com" variant="fluid"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    value={email} onChange={(e) => {
+                        setEmail(e.target.value);
+                        //  check with regex if email is valid
+                        const regex = new RegExp("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$", "i");
+                        if (regex.test(e.target.value)) {
+                            setValidity({ ...validity, email: { ...validity.email, loading: true } })
+                            validateEmail(e.target.value)
+                                .then((valid: boolean) => {
+                                    setValidity({ ...validity, email: { ...validity.email, loading: false, valid: valid } })
+                                }).catch((err) => {
+                                    setValidity({ ...validity, email: { ...validity.email, loading: false, valid: false } })
+                                })
+                        }
+                    }}
+                    className="pr-10" />
+                <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    {validity.email.loading ? <CgSpinner className="animate-spin h-5 w-5" /> :
+                        validity.email.valid ? <LuCheckCircle2 className="h-5 w-5 text-green-500" /> : validity.email.valid === false ? <RiErrorWarningLine className="h-5 w-5 text-red-500" /> : null}
+                </span>
+            </div>
+        </div>
+        <div className="grid w-full max-w-lg items-center gap-1.5">
+            <Label htmlFor="password">Enter your username</Label>
+            <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 l">
+                    socially.bio/
+                </span>
+                <Input type="text" id="username"
+                    pattern="^[a-zA-Z0-9_]" variant="fluid"
+                    value={username} onChange={(e) => {
+                        // prevent invalid characters 
+
+                        setUsername(e.target.value
+                            .split('')
+                            .filter(char => !INVALID_CHARACTERS.includes(char))
+                            .join('').trim());
+                        if (username.length > 3) {
+                            validateUsername(username)
+                                .then((valid: boolean) => {
+                                    setValidity({ ...validity, username: { ...validity.username, loading: false, valid: valid } })
+                                }).catch(() => {
+                                    setValidity({ ...validity, username: { ...validity.username, loading: false, valid: false } })
+                                })
+                        }
+
+
+                    }}
+                    placeholder="username" className="pl-[98px] pr-10" />
+                <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    {validity.username.loading ? <CgSpinner className="animate-spin h-5 w-5" /> :
+                        validity.username.valid ? <LuCheckCircle2 className="h-5 w-5 text-green-500" /> : validity.username.valid === false ? <RiErrorWarningLine className="h-5 w-5 text-red-500" /> : null}
+
+                </span>
+            </div>
+        </div>
+        <div className="grid w-full max-w-lg items-center gap-1.5">
+            <Label htmlFor="password">Enter your password</Label>
+            <div className="relative">
+                <Input
+                    type={"text"} id="password" variant="fluid"
+                    value={password} onChange={(e) => {
+                        setPassword(e.target.value);
+                        if(isStrongPassword(password)){
+                            setValidity({
+                                ...validity,
+                                password:true
+                            })
+                        }
+                    }}
+                    placeholder="Password" />
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                        {validity.password && <LuCheckCircle2 className="h-5 w-5 text-green-500" /> }
+                </span>
+            </div>
+        </div>
+        <div className="grid w-full max-w-lg items-center gap-1.5">
+            <Button className="w-full rounded-full ease-linear hover:bg-black duration-300 text-base" 
+            disabled={loading || (validity.password === false || validity.email.valid === false || validity.username.valid === false)}
+            
+            size="lg">
+                Create a new Account
+            </Button>
+        </div>
+        <div className="pt-lg  max-w-lg text-center">
+            <p className="text-center my-4 capitalize text-sm text-concrete font-semibold">
+                OR SIGN UP WITH
+            </p>
+            <div className="w-full max-w-lg flex flex-col gap-3">
+                <Button className="rounded-full ease-linear  duration-300 text-base font-medium text-slate-900 bg-white hover:bg-slate-100 border border-solid border-border shadow-lg shadow-slate-200" size="lg">
+                    <FcGoogle className="mr-2 h-6 w-6" />
+                    Sign up with Google
+                </Button>
+                {/* <Button className="rounded-full ease-linear duration-300 text-base font-medium text-slate-100 bg-slate-700 hover:bg-slate-800 shadow-lg" size="lg">
+                <FaApple className="mr-2 h-6 w-6" />
+                Sign up with Apple
+              </Button> */}
+            </div>
+            <div className="flex justify-center mt-8">
+                <p className="text-concrete">Already have an account?&nbsp;</p>
+                <Link className=" text-primary inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 underline"
+                    href="/auth/login" data-testid="login_redirect">Log in</Link>
+            </div>
+            <p className="text-concrete text-xs lg:text-sm pt-8">By clicking <span className="font-semibold">Create account / Sign up</span>, you agree to {process.env.NEXT_PUBLIC_APP_NAME}'s
+                <Link className="!text-concrete text-sm text-primary inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 underline"
+                    href={process.env.NEXT_PUBLIC_HOME + "/p/terms/"}>Terms and Conditions </Link> {" "}
+                and confirm you have read our <Link className="!text-concrete text-sm text-primary inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 underline"
+                    href={process.env.NEXT_PUBLIC_HOME + "/p/privacy/"}>Privacy Notice</Link>.
+                You may receive offers, news and updates from us.
+            </p>
+        </div>
+    </>)
+}
+function isStrongPassword(password:string) {
+    const minLength = 8;
+    const minUppercase = 1;
+    const minLowercase = 1;
+    const minNumbers = 1;
+    const minSpecialChars = 1;
+    const specialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
+
+    const uppercaseRegex = /[A-Z]/g;
+    const lowercaseRegex = /[a-z]/g;
+    const numbersRegex = /[0-9]/g;
+
+    // Check minimum length
+    if (password.length < minLength) {
+        return false;
+    }
+
+    // Check for minimum uppercase letters
+    if ((password.match(uppercaseRegex) || []).length < minUppercase) {
+        return false;
+    }
+
+    // Check for minimum lowercase letters
+    if ((password.match(lowercaseRegex) || []).length < minLowercase) {
+        return false;
+    }
+
+    // Check for minimum numbers
+    if ((password.match(numbersRegex) || []).length < minNumbers) {
+        return false;
+    }
+
+    // Check for minimum special characters
+    if (!specialChars.test(password) || (password.match(specialChars) || []).length < minSpecialChars) {
+        return false;
+    }
+
+    return true;
+}
