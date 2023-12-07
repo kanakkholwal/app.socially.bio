@@ -4,12 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import toast from "react-hot-toast";
 // import { FaApple } from "react-icons/fa";
 import { CgSpinner } from "react-icons/cg";
 import { FcGoogle } from "react-icons/fc";
 import { LuCheckCircle2 } from "react-icons/lu";
 import { RiErrorWarningLine } from "react-icons/ri";
-
 
 interface Props {
     validateEmail: (email: string) => Promise<boolean>,
@@ -35,8 +35,43 @@ export function RegisterForm({ validateEmail, validateUsername }: Props) {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [state, setState] = useState<"onboarding" | "registered">("onboarding");
+
+    const signUp = async () => {
+
+        return new Promise(async(resolve, reject) => {
+            setLoading(true);
+            try {
+                const res = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        username,
+                        password,
+                    }),
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    setState("registered");
+                    resolve(data);
+                } else {
+                    setError(data.message);
+                    reject(data);
+                }
+            } catch (err:any) {
+                setError(err?.message ?? "Something went wrong");
+                reject(err);
+            } finally {
+                setLoading(false);
+            }
+        })
+    }
 
     return (<>
+        {state === "onboarding" &&<>
         <div className="grid w-full max-w-lg items-center gap-1.5">
             <Label htmlFor="email">Enter your Email</Label>
             <div className="relative">
@@ -120,7 +155,23 @@ export function RegisterForm({ validateEmail, validateUsername }: Props) {
         <div className="grid w-full max-w-lg items-center gap-1.5">
             <Button className="w-full rounded-full ease-linear hover:bg-black duration-300 text-base" 
             disabled={loading || (validity.password === false || validity.email.valid === false || validity.username.valid === false)}
+            onClick={()=>{
+                if(!isStrongPassword(password)){
+                    toast.error("Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character")
+                    return;
+                }
             
+                toast.promise(signUp(),{
+                    loading: "Creating account...",
+                    success: (data) => {
+                        return <> Account created successfully!</>
+                    },
+                    error: (err) => {
+                        return <>{err.message}</>
+                    }
+                })
+                
+            }}
             size="lg">
                 Create a new Account
             </Button>
@@ -152,6 +203,16 @@ export function RegisterForm({ validateEmail, validateUsername }: Props) {
                 You may receive offers, news and updates from us.
             </p>
         </div>
+        </>}
+        {state === "registered" && <>
+            <div className="grid w-full max-w-lg items-center gap-1.5">
+                <div className="flex flex-col items-center justify-center">
+                    <LuCheckCircle2 className="h-16 w-16 text-green-500" />
+                    <h1 className="text-2xl font-semibold text-black">Account created successfully!</h1>
+                    <p className="text-concrete text-sm">Please check your email to verify your account</p>
+                </div>
+            </div>
+        </>}
     </>)
 }
 function isStrongPassword(password:string) {
