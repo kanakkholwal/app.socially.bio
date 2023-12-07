@@ -21,7 +21,7 @@ export default async function Register() {
 
     await dbConnect();
 
-    const validateEmail = async (email: string):Promise<boolean> => {
+    const validateEmail = async (email: string): Promise<boolean> => {
         "use server";
         return new Promise(async (resolve, reject) => {
             if (cache.has(email as string)) {
@@ -37,7 +37,7 @@ export default async function Register() {
             }
         })
     }
-    const validateUsername = async (username: string):Promise<boolean> => {
+    const validateUsername = async (username: string): Promise<boolean> => {
         "use server";
         return new Promise(async (resolve, reject) => {
             if (cache.has(username as string)) {
@@ -63,11 +63,11 @@ export default async function Register() {
                     Join Socially Bio!
                 </h1>
                 <p className="text-concrete text-xl">
-                    Sign up for free!
+                    It's quick and easy.
                 </p>
             </header>
             <main className="flex flex-col items-center justify-center w-full p-4 space-y-4">
-                <RegisterForm validateEmail={validateEmail} validateUsername={validateUsername}/>
+                <RegisterForm validateEmail={validateEmail} validateUsername={validateUsername} />
             </main>
 
 
