@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import "./animate.css";
 
 export default function VerifyUser({ validateUser, requestNewVerificationToken }: {
@@ -136,32 +137,7 @@ export default function VerifyUser({ validateUser, requestNewVerificationToken }
                                     <p className="text-sm">Request a new verification token to be sent to your email.</p>
                                 </DialogDescription>
                             </DialogHeader>
-                            <div className="grid w-full max-w-lg items-center gap-1.5">
-                                <Label htmlFor="email">Enter your Email</Label>
-                                <Input type="email" id="email" placeholder="e.g. johndoe@gmail.com" variant="fluid"
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                    value={email} onChange={(e) => setEmail(e.target.value)}
-                                    className="pr-10" />
-                            </div>
-                            <div className="grid w-full max-w-lg items-center gap-1.5">
-                                <Button className="w-full rounded-full ease-linear hover:bg-black duration-300 text-base shadow-lg shadow-violet-200" size="lg"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        requestNewVerificationToken(email)
-                                            .then((res) => {
-                                                if (res.result === "success") {
-                                                    setError(res.message)
-                                                } else if (res.result === "fail") {
-                                                    setError(res.message)
-                                                }
-                                            }).catch((err) => {
-                                                console.log(err)
-                                                setError(err.message)
-                                            })
-                                    }}>
-                                    Request new verification token
-                                </Button>
-                            </div>
+                            <RequestNewVerificationToken requestNewVerificationToken={requestNewVerificationToken} />
                         </DialogContent>
                     </Dialog>}
 
@@ -185,5 +161,52 @@ export default function VerifyUser({ validateUser, requestNewVerificationToken }
             </CardContent>
         </Card>
 
+    </>)
+}
+
+function RequestNewVerificationToken({ requestNewVerificationToken }: {
+    requestNewVerificationToken: (email: string) => Promise<{
+        result: "fail" | "success",
+        message: string
+    }>
+}) {
+    const [email, setEmail] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<{
+        result: "fail" | "success",
+        message: string
+    } | null>(null);
+    return (<>
+        <div className="grid w-full max-w-lg items-center gap-1.5">
+            <Label htmlFor="email">Enter your Email</Label>
+            <Input type="email" id="email" placeholder="e.g. johndoe@gmail.com" variant="fluid"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                value={email} onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                className="pr-10" />
+        </div>
+        <div className="grid w-full max-w-lg items-center gap-1.5">
+            <Button className="w-full rounded-full ease-linear hover:bg-black duration-300 text-base shadow-lg shadow-violet-200" size="lg"
+                disabled={loading || email.length < 6}
+                onClick={(e) => {
+                    e.preventDefault();
+                setLoading(true)
+                    requestNewVerificationToken(email)
+                        .then((res) => {
+                            if (res.result === "success") {
+                                toast.success(res.message)
+                            } else if (res.result === "fail") {
+                                setError(res)
+                            }
+                        }).catch((err) => {
+                            console.log(err)
+                            setError(err)
+                        }).finally(() => {
+                            setLoading(false)
+                        })
+                }}>
+                Request new verification token
+            </Button>
+        </div>
     </>)
 }
