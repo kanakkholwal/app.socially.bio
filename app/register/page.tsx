@@ -1,12 +1,11 @@
 import { authOptions } from "app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth/next";
 
-import { RegisterForm } from "./register-form";
-
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import dbConnect from "src/lib/dbConnect";
 import User from "src/models/user";
+import { RegisterForm } from "./register-form";
 
 export const metadata: Metadata = {
     title: "Register | " + process.env.NEXT_PUBLIC_APP_NAME,
@@ -14,10 +13,11 @@ export const metadata: Metadata = {
     keywords: "register, account, " + process.env.NEXT_PUBLIC_APP_NAME,
 }
 const cache = new Map<string, boolean>();
+
 export default async function Register() {
     const session = await getServerSession(authOptions);
     console.log(session)
-    if (session) return redirect("/")
+    if (session) return redirect("/dashboard")
 
     await dbConnect();
 

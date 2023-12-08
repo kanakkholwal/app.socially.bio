@@ -190,7 +190,7 @@ function RequestNewVerificationToken({ requestNewVerificationToken }: {
                 disabled={loading || email.length < 6}
                 onClick={(e) => {
                     e.preventDefault();
-                setLoading(true)
+                    setLoading(true)
                     requestNewVerificationToken(email)
                         .then((res) => {
                             if (res.result === "success") {

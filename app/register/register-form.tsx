@@ -193,7 +193,7 @@ export function RegisterForm({ validateEmail, validateUsername }: Props) {
             <div className="flex justify-center mt-8">
                 <p className="text-concrete">Already have an account?&nbsp;</p>
                 <Link className=" text-primary inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 underline"
-                    href="/auth/login" data-testid="login_redirect">Log in</Link>
+                    href="/" data-testid="login_redirect">Log in</Link>
             </div>
             <p className="text-concrete text-xs lg:text-sm pt-8">By clicking <span className="font-semibold">Create account / Sign up</span>, you agree to {process.env.NEXT_PUBLIC_APP_NAME}'s
                 <Link className="!text-concrete text-sm text-primary inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 underline"
