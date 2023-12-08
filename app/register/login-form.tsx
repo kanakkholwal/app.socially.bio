@@ -64,7 +64,7 @@ export function LoginForm() {
                 <p className="text-concrete">
                     Don't have an account?&nbsp;</p>
                 <Link className=" text-primary inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 underline"
-                    href="/auth/register" data-testid="register_redirect">Register</Link>
+                    href="/register" data-testid="register_redirect">Register</Link>
             </div>
         </div>
 

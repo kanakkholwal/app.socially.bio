@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Layout({children}:{
+export function Layout({children}:{
     children: React.ReactNode
 }) {
     return (
