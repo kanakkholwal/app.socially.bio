@@ -22,7 +22,7 @@ export default function ErrorPage() {
                 <Button className="bg-slate-900 text-white" asChild>
                     <Link href="/">Go to Home</Link>
                 </Button>
-                </div>
+            </div>
         </div>
 
     </div>

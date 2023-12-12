@@ -72,6 +72,17 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    provider: {
+      type: String,
+      default: 'local',
+      enum: {
+        values: ['local', 'google'],
+      },
+    },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
   }
 );
 
