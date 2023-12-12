@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import FaceBookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
-import InstagramProvider from "next-auth/providers/instagram";
 import dbConnect from "src/lib/dbConnect";
 import UserModel from "src/models/user";
 // Define types for environment variables
@@ -10,13 +10,14 @@ interface AuthEnv {
     GOOGLE_SECRET: string;
     NEXT_AUTH_SECRET: string;
     NEXTAUTH_URL: string;
-    INSTAGRAM_CLIENT_ID: string;
-    INSTAGRAM_CLIENT_SECRET: string;
+    FACEBOOK_ID: string;
+    FACEBOOK_SECRET: string;
 }
 
 // Define types for user object
 interface User {
     _id: string;
+    id?: string;
     name: string;
     email: string;
     username: string;
@@ -24,6 +25,7 @@ interface User {
     profilePicture: string;
     role?: string;
     verified?: boolean;
+    provider: string;
 }
 // Read environment variables
 const env: AuthEnv = {
@@ -31,8 +33,9 @@ const env: AuthEnv = {
     GOOGLE_SECRET: process.env.GOOGLE_SECRET || "",
     NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET || "",
     NEXTAUTH_URL: process.env.NEXTAUTH_URL || "",
-    INSTAGRAM_CLIENT_ID: process.env.INSTAGRAM_CLIENT_ID || "",
-    INSTAGRAM_CLIENT_SECRET: process.env.INSTAGRAM_CLIENT_SECRET || "",
+    FACEBOOK_ID: process.env.FACEBOOK_ID || "",
+    FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || "",
+
 };
 
 // Check if all required environment variables are defined
@@ -41,13 +44,29 @@ Object.values(env).forEach((value) => {
         throw new Error(`Environment variable ${value} is not defined`);
     }
 });
+const useSecureCookies = env.NEXTAUTH_URL.startsWith('https://')
+const cookiePrefix = useSecureCookies ? '__Secure-' : ''
+const hostName = new URL(env.NEXTAUTH_URL).hostname;
 
-export const authOptions :NextAuthOptions  = {
+export const authOptions: NextAuthOptions = {
     // Enable JSON Web Tokens since we will not store sessions in our DB
     session: {
         strategy: "jwt",
     },
     secret: env.NEXT_AUTH_SECRET,
+    cookies: {
+        sessionToken: {
+            name: `${useSecureCookies ? "__Secure-" : ""}next-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: useSecureCookies,
+                domain: hostName == 'localhost' ? hostName : '.' + "socially.bio" // add a . in front so that subdomains are included
+
+            }
+        },
+    },
 
     // Here we add our login providers - this is where you could add Google or Github SSO as well
     providers: [
@@ -60,9 +79,6 @@ export const authOptions :NextAuthOptions  = {
             },
             // Authorize callback is ran upon calling the sign-in function
             authorize: async (credentials) => {
-
-
-                // return Promise.resolve(user)
                 return new Promise(async (resolve, reject) => {
                     if (!credentials || !credentials.email || !credentials.password) {
                         return reject({
@@ -71,40 +87,39 @@ export const authOptions :NextAuthOptions  = {
                             success: false
                         })
                     }
-
                     try {
-
                         await dbConnect();
+                        const userInDb = await UserModel.findOne({ email: credentials.email }).select('+password')
 
-                        // Try to find the user and also return the password field
-                        const user = await UserModel.findOne({ email: credentials.email }).select('+password')
-
-                        if (!user) {
+                        if (!userInDb) 
                             return reject({
                                 status: 401,
                                 message: "User not found",
                                 success: false
                             })
-                        }
-
-                        // Use the comparePassword method we defined in our user.js Model file to authenticate
-                        const pwValid = await user.comparePassword(credentials.password)
-
-
-                        if (!pwValid) {
-
-
+                        const pwValid = await userInDb.comparePassword(credentials.password);
+                    
+                        if (!pwValid) 
                             reject({
                                 status: 401,
                                 message: "Wrong Password",
                                 success: false
                             })
+                        const user = {
+                            _id: userInDb._id.toString(),
+                            id: userInDb._id.toString(),
+                            name: userInDb.name,
+                            email: userInDb.email,
+                            username: userInDb.username,
+                            account_type: userInDb.account_type || "free",
+                            profilePicture: userInDb.profilePicture,
+                            role: userInDb.role || "user",
+                            verified: userInDb.verified || false,
+                            provider: "credentials"
+                        } satisfies User
+                        
 
-                        }
-
-
-
-                        // console.log(user)
+                        console.log("user found",user)
                         resolve(user)
 
                     }
@@ -144,6 +159,7 @@ export const authOptions :NextAuthOptions  = {
                             account_type: "free",
                             verificationToken: null,
                             verified: true,
+                            provider: "google"
                         });
                         await user.save();
 
@@ -161,26 +177,25 @@ export const authOptions :NextAuthOptions  = {
 
             },
         }),
-        InstagramProvider({
-            clientId: env.INSTAGRAM_CLIENT_ID || "",
-            clientSecret: env.INSTAGRAM_CLIENT_SECRET || "",
-            profile(profile: any) {
+        FaceBookProvider({
+            clientId: env.FACEBOOK_ID || "",
+            clientSecret: env.FACEBOOK_SECRET || "",
+            profile(profile) {
                 console.log(profile);
-                return {
+                return Promise.resolve({
                     id: profile.id,
-                    name: profile.username,
-                    // email: profile.username + "@instagram.com",
-                    profilePicture: profile.profile_picture
-                }
-            }
+                    name: profile.name,
+                    email: profile.email,
+                    profilePicture: profile.picture.data.url,
+                });
+            },
         })
-
     ],
     // All of this is just to add user information to be accessible for our app in the token/session
     callbacks: {
         // We can pass in additional information from the user document MongoDB returns
         // This could be avatars, role, display name, etc...
-        async jwt({ token, user }:{
+        async jwt({ token, user }: {
             token: any,
             user: any
         }): Promise<any> {
@@ -194,12 +209,13 @@ export const authOptions :NextAuthOptions  = {
                     profilePicture: user.profilePicture,
                     role: user.role || "user",
                     verified: user.verified || false,
+                    provider: user.provider
                 }
             }
             return token
         },
         // If we want to access our extra user info from sessions we have to pass it the token here to get them in sync:
-        session: async ({ session, token }:{
+        session: async ({ session, token }: {
             session: any,
             token: any
         }) => {

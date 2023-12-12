@@ -31,7 +31,7 @@ export default function Navbar({ user }: { user: SessionUserType }) {
                             <VscChevronDown className="text-slate-500" />
                         </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent sideOffset={15}>
+                    <DropdownMenuContent sideOffset={15} align="end">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>

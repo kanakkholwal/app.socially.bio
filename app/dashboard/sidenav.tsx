@@ -22,12 +22,12 @@ const nav_items :NavItem[] = [
         items:[
             {
                 name: "All Links",
-                href: "/dashboard/links/all",
+                href: "/dashboard/links",
                 icon:RiLinksFill
             },
             {
                 name: "Add Link",
-                href: "/dashboard/links/add",
+                href: "/dashboard/links/create",
                 icon:LuPlusCircle
             },
         ]
@@ -39,7 +39,7 @@ export default function Sidenav() {
     return (<div className="w-64 h-full bg-tertiary/5 fixed lg:relative top-0 left-0 bottom-0 z-10 min-h-screen border-r border-tertiary/10">
         <div className="p-4">
             <Link href="/dashboard" className="flex items-center justify-center">
-                <Image src="/socially-bio.svg" alt="Socially Bio" width={200} height={200} className="w-44 h-12 " />
+                <Image src="/socially-bio.svg" alt="Socially Bio" width={200} height={200} className="w-44 h-12 " priority/>
             </Link>
         </div>
         <div className="p-4 space-y-4">

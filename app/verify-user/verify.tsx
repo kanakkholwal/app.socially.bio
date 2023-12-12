@@ -60,7 +60,7 @@ export default function VerifyUser({ validateUser, requestNewVerificationToken }
                 if (res.result === "success") {
                     setIsVerified(true)
                     setTimeout(() => {
-                        router.push("/auth/login")
+                        router.push("/login")
                     }, 8000)
                 } else if (res.result === "fail") {
                     setIsVerified(false)
@@ -154,7 +154,7 @@ export default function VerifyUser({ validateUser, requestNewVerificationToken }
                 {isVerified && <Button
                     className="w-full rounded-full ease-linear hover:bg-black duration-300 text-base shadow-lg shadow-violet-200"
                     size="lg" asChild>
-                    <Link href="/auth/login">
+                    <Link href="/">
                         Login to your account
                     </Link>
                 </Button>}
