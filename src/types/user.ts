@@ -12,12 +12,13 @@ export type UserType = {
     verified: boolean;
 }
 export type SessionUserType = {
-    id: string;
+    _id: string;
+    id?: string;
     name: string;
+    username: string;
     email: string;
     profilePicture: string;
     role: string;
     account_type: string;
-    username: string;
     verified: boolean;
 }

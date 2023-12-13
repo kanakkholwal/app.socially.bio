@@ -34,7 +34,7 @@ async function createLink(url: string, expiresAt: string, opener: string,user: a
         url: url,
         expiresAt,
         opener,
-        creator: user.id
+        creator: user._id
 
     });
     await newLink.save();

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { revalidatePath } from 'next/cache';
 import { Dispatch, Reducer, useReducer } from "react";
 import { BsTwitterX, BsYoutube } from "react-icons/bs";
 import { LuLinkedin } from "react-icons/lu";
@@ -179,17 +180,9 @@ export function CreateLinkForm() {
                         }
                     }
                 })
-                resolve(data);
+                revalidatePath('/dashboard/links')
+                resolve(response);
             }).catch((err) => {
-                dispatch({
-                    type: "UPDATE_ACTION",
-                    payload: {
-                        loading: false,
-                        error: true,
-                        success: false,
-                        message: "Error Generating Shorten Link"
-                    }
-                })
                 reject(err);
             })
         })

@@ -36,6 +36,11 @@ const tempLinkSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
+        passwordProtected:{
+            type: Boolean || String,
+            default: false
+        },
+        
     },{
         timestamps: true,
     }
