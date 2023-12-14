@@ -12,10 +12,11 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
+type Dispatch<A> = (value: A) => void; type SetStateAction<S> = S | ((prevState: S) => S); type SetState<S> = Dispatch<SetStateAction<S>>;
 
 export function DatePicker({ date, setDate }: {
     date: Date,
-    setDate: React.Dispatch<React.SetStateAction<Date | undefined>>
+    setDate: React.Dispatch<React.SetStateAction<Date | undefined>> | React.Dispatch<Date | undefined>
 }) {
 
     return (
