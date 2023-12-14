@@ -2,9 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IoAnalytics, IoLinkSharp } from "react-icons/io5";
 import { LuPlusCircle } from "react-icons/lu";
 import { RiLinksFill } from "react-icons/ri";
 import { RxDashboard } from "react-icons/rx";
+import { TbLayout2 } from "react-icons/tb";
 
 
 export type NavItem = {
@@ -19,7 +21,7 @@ export type NavItem = {
 
 const nav_items :NavItem[] = [
     {
-        title: "Links",
+        title: "Temp Link",
         items:[
             {
                 name: "All Links",
@@ -32,7 +34,27 @@ const nav_items :NavItem[] = [
                 icon:LuPlusCircle
             },
         ]
-    }
+    },
+    {
+        title: "My Page",
+        items:[
+            {
+                name: "Appearance",
+                href: "/dashboard/page/appearance",
+                icon:TbLayout2
+            },
+            {
+                name: "Links",
+                href: "/dashboard/page/links",
+                icon:IoLinkSharp
+            },
+            {
+                name: "Analytics",
+                href: "/dashboard/page/analytics",
+                icon:IoAnalytics
+            },
+        ]
+    },
 ]
 
 export default function Sidenav() {
@@ -50,7 +72,7 @@ export default function Sidenav() {
             </Link>
             <div>
                 {nav_items.map((item, i) => {
-                    return (<div key={i}>
+                    return (<div key={i} className="mb-3">
                         <h6 className="text-xs text-slate-700 uppercase font-semibold tracking-wider ml-4 mb-2">{item.title}</h6>
                         <ul className="space-y-1">
                             {item.items.map((item, i) => {

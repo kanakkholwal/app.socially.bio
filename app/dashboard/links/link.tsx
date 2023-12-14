@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import toast from "react-hot-toast";
 import { LuCopy } from "react-icons/lu";
-import { MdLockOpen, MdLockOutline } from "react-icons/md";
+import { MdLockOpen, MdLockOutline, MdOutlineDeleteOutline } from "react-icons/md";
 import { TempLinkType } from "src/types/tempLink";
 import { deleteLink } from "./delete-action";
 
@@ -61,7 +61,9 @@ export default function Item({ link }: {
                     })
 
                 }}
-            >Delete</Button>
+            >
+                <MdOutlineDeleteOutline className="inline-block text-inherit" />
+            </Button>
         </div>
     </div>)
 }

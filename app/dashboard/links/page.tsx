@@ -8,7 +8,7 @@ import { SessionType } from "src/types/session";
 import { TempLinkType } from "src/types/tempLink";
 import Item from './link';
 
-export const revalidate = 5;
+export const revalidate = 1;
 
 export const metadata = {
     title: "All Links | " + process.env.NEXT_PUBLIC_APP_NAME,

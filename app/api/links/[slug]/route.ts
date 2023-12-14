@@ -65,7 +65,7 @@ export async function PUT(request: NextRequest,  { params }: { params: { slug: s
 export async function DELETE(request: NextRequest,  { params }: { params: { slug: string } }
     ) {
     try {
-        const session = await getServerSession(authOptions) as SessionType;
+        const session = await getServerSession(authOptions) as SessionType | null;
         console.log(session);
         if (!session || !session.user) {
             return NextResponse.json({
