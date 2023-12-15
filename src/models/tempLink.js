@@ -1,14 +1,10 @@
 import mongoose from "mongoose";
-import ShortUniqueId from 'short-unique-id';
-
-const uid = new ShortUniqueId({ length: 6 });
 
 
 const tempLinkSchema = new mongoose.Schema(
     {
         slug:{
             type: String,
-            default: uid(),
             unique: true,
             trim: true,
             required: true,
@@ -21,8 +17,13 @@ const tempLinkSchema = new mongoose.Schema(
         expiresAt: {
             type: Date,
             required: true,
+            default:new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hrs
         },
-        hits: {
+        visits: {
+            type: Number,
+            default: 0,
+        },
+        hits:{
             type: Number,
             default: 0,
         },
@@ -30,7 +31,16 @@ const tempLinkSchema = new mongoose.Schema(
             type: String,
             trim: true,
             enums:["instagram", "facebook", "twitter", "linkedin", "pinterest", "youtube", "tiktok", "others"]
-        }
+        },
+        creator:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        passwordProtected:{
+            type: Boolean || String,
+            default: false
+        },
+        
     },{
         timestamps: true,
     }

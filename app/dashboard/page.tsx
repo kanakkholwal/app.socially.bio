@@ -8,37 +8,47 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import Link from "next/link";
+import { GrTransaction } from "react-icons/gr";
+import { LuLayoutTemplate } from "react-icons/lu";
+import { RiLinksFill } from "react-icons/ri";
+import { TbBrandGoogleAnalytics } from "react-icons/tb";
+
 const quickAccess = [
     {
         title: "Page Appearance",
         description: "Change the appearance of your page",
-        icon: "icon",
         link: "/dashboard/appearance",
-        status: "available"
+        status: "available",
+        icon: LuLayoutTemplate
     },
     {
         title: "Analytics",
         description: "View analytics for your page",
-        icon: "icon",
         link: "/dashboard/analytics",
-        status: "available"
+        status: "comming-soon",
+        icon: TbBrandGoogleAnalytics
     },
     {
         title: "Create Links",
         description: "Create links for your page",
-        icon: "icon",
         link: "/dashboard/links",
-        status: "available"
+        status: "available",
+        icon: RiLinksFill
     },
     {
         title: "Create Actions",
         description: "Create actions for your page",
-        icon: "icon",
         link: "/dashboard/actions",
-        status: "comming-soon"
+        status: "comming-soon",
+        icon: GrTransaction
     },
-
-]
+] as {
+    title: string,
+    description: string,
+    link: string,
+    status: "available" | "comming-soon",
+    icon: React.ElementType
+}[]
 
 export default function DashboardPage() {
     return (
@@ -49,24 +59,32 @@ export default function DashboardPage() {
             <p className="text-md font-regular  mt-5">
                 Welcome to your dashboard!
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4">
 
                 {quickAccess.map((item, index) => {
                     return (
-                        <Card key={index}>
-                            <CardHeader>
-                                <CardTitle>{item.title}</CardTitle>
-                                <CardDescription>{item.description}</CardDescription>
+                        <Card key={index} className={"hover:shadow-xl hover:shadow-slate-200 " + (item.status !== "available" ? "cursor-not-allowed" : "")}>
+                            <CardHeader className="flex gap-3 flex-row items-stretch">
+                                <div className="bg-tertiary/20 rounded-full p-3 h-16 w-16 flex items-center justify-center">
+                                    <item.icon className="w-6 h-6" />
+
+                                </div>
+                                <div>
+                                    <CardTitle>{item.title}</CardTitle>
+                                    <CardDescription>{item.description}</CardDescription>
+                                </div>
                             </CardHeader>
-                            {/* <CardContent>
-                                <p>Card Content</p>
-                            </CardContent> */}
                             <CardFooter className="justify-end">
-                                <Button variant="outline" size="sm" disabled={item.status !== "available"} asChild>
-                                    <Link href={item.link} className={item.status !== "available" ? "cursor-not-allowed":""}>
-                                        {item.status === "available" ? "View Service" : "Comming Soon"}
-                                    </Link>
-                                </Button>
+
+                                {item.status === "available" ? <Link href={item.link}>
+                                    <Button size="sm" className={item.status === "available" ? "hover:bg-black duration-300 " : "bg-primary/20 cursor-not-allowed"} disabled={item.status !== "available"} >
+                                        View Service
+                                    </Button>
+                                </Link> :
+                                    <Button size="sm"  disabled={true} >
+                                        View Service
+                                    </Button>}
+
                             </CardFooter>
                         </Card>
                     )

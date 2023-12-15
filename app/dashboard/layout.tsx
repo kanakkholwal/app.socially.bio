@@ -26,9 +26,11 @@ export default async function Layout({ children }: {
     children: React.ReactNode
 }) {
     const session = await getServerSession(authOptions) as SessionType | null;
-    console.log(session)
-    if (!session || !session?.user) return redirect("/")
-
+    // console.log(session)
+    if (!session || !session?.user){
+        console.log("No Session, Redirecting to /")
+        return redirect("/")
+    }
 
     return (<div className={"w-full min-h-screen h-full relative flex items-stretch bg-white " + font.className}>
         <Sidenav />
