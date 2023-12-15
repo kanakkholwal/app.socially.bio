@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 import toast from "react-hot-toast";
+import { GrView } from "react-icons/gr";
 import { LuCopy } from "react-icons/lu";
-import { MdLockOpen, MdLockOutline, MdOutlineDeleteOutline } from "react-icons/md";
+import { MdLockOpen, MdLockOutline, MdOutlineDeleteOutline, MdUpdate } from "react-icons/md";
+import { TbHandClick } from "react-icons/tb";
 import { TempLinkType } from "src/types/tempLink";
 import { deleteLink } from "./delete-action";
 
@@ -32,6 +34,21 @@ export default function Item({ link }: {
                     className="inline-block ml-2 text-md text-slate-500 hover:text-slate-900 cursor-pointer" />
             </h6>
             <p className="text-sm font-regular text-slate-500 text-ellipsis overflow-hidden max-w-xl">{link.url}</p>
+            <div className="flex flex-row items-center gap-2 mt-2">
+                <span className="text-sm font-regular text-slate-500">
+                    <GrView className="inline-block w-4 h-4 text-inherit text-slate-500 mr-1" />
+
+                    Views: {link.visits}</span>
+                <span className="text-sm font-regular text-slate-500">
+                    <TbHandClick className="inline-block w-4 h-4 text-inherit text-slate-500 mr-1" />
+                    Clicks: {link.hits}</span>
+                <span className="text-sm font-regular text-slate-500">
+                    <MdUpdate className="inline-block w-4 h-4 text-inherit text-slate-500 mr-1" />
+                    Expires at {new Date(link.expiresAt).toLocaleDateString()}
+                
+                    </span>
+
+            </div>
         </div>
         <div className="flex flex-row gap-4 items-center">
             <Link href={`/dashboard/links/${link.slug}/edit`}>
@@ -50,7 +67,7 @@ export default function Item({ link }: {
                     setLoading(true);
                     toast.promise(deleteLink(link), {
                         loading: 'Deleting link...',
-                        success: () =>{
+                        success: () => {
                             setLoading(false);
                             return 'Link deleted successfully!'
                         },

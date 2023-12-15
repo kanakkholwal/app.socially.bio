@@ -63,7 +63,7 @@ export default function DashboardPage() {
 
                 {quickAccess.map((item, index) => {
                     return (
-                        <Card key={index} className={"hover:shadow-xl hover:shadow-slate-200 " + (item.status !== "available" ? "cursor-not-allowed":"")}>
+                        <Card key={index} className={"hover:shadow-xl hover:shadow-slate-200 " + (item.status !== "available" ? "cursor-not-allowed" : "")}>
                             <CardHeader className="flex gap-3 flex-row items-stretch">
                                 <div className="bg-tertiary/20 rounded-full p-3 h-16 w-16 flex items-center justify-center">
                                     <item.icon className="w-6 h-6" />
@@ -75,12 +75,16 @@ export default function DashboardPage() {
                                 </div>
                             </CardHeader>
                             <CardFooter className="justify-end">
-                                <Button  size="sm" className={item.status === "available" ? "hover:bg-black duration-300 " : "bg-primary/20 cursor-not-allowed"} disabled={item.status !== "available"} asChild>
-                                    {item.status === "available" ? <Link href={item.link}>
-                                        View Service
-                                    </Link> : <span>Comming Soon</span>}
 
-                                </Button>
+                                {item.status === "available" ? <Link href={item.link}>
+                                    <Button size="sm" className={item.status === "available" ? "hover:bg-black duration-300 " : "bg-primary/20 cursor-not-allowed"} disabled={item.status !== "available"} >
+                                        View Service
+                                    </Button>
+                                </Link> :
+                                    <Button size="sm"  disabled={true} >
+                                        View Service
+                                    </Button>}
+
                             </CardFooter>
                         </Card>
                     )

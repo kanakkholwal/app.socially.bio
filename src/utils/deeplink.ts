@@ -5,9 +5,9 @@ function isAppInstalled(appName:string) {
       return window.matchMedia("(intent:scheme;" + appName + ")").matches;
     }
     // Check for iOS app
-    if (window.navigator.userAgent.includes("iPhone") || window.navigator.userAgent.includes("iPad")) {
-        return window.navigator.canOpenURL("itms-apps://apps.apple.com/" + appName)
-    }
+    // if (window.navigator.userAgent.includes("iPhone") || window.navigator.userAgent.includes("iPad")) {
+    //     return window.navigator.canOpenURL("itms-apps://apps.apple.com/" + appName)
+    // }
     return false;
   }
   

@@ -14,9 +14,9 @@ import {
 import { cn } from "@/lib/utils"
 type Dispatch<A> = (value: A) => void; type SetStateAction<S> = S | ((prevState: S) => S); type SetState<S> = Dispatch<SetStateAction<S>>;
 
-export function DatePicker({ date, setDate }: {
-    date: Date,
-    setDate: React.Dispatch<React.SetStateAction<Date | undefined>> | React.Dispatch<Date | undefined>
+export function DatePicker({ value, onChange }: {
+    value: Date,
+    onChange: React.Dispatch<React.SetStateAction<Date>>
 }) {
 
     return (
@@ -26,18 +26,18 @@ export function DatePicker({ date, setDate }: {
                     variant={"outline"}
                     className={cn(
                         "w-[280px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
+                        !value && "text-muted-foreground"
                     )}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    {value ? format(value, "PPP") : <span>Pick a date</span>}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
                 <Calendar
                     mode="single"
-                    selected={date}
-                    onSelect={setDate}
+                    selected={value}
+                    onSelect={onChange as any}
                     initialFocus
                 />
             </PopoverContent>

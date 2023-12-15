@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "src/lib/dbConnect";
 import TempLink from "src/models/tempLink";
 import { SessionType } from "src/types/session";
+import { DeleteLinkBySlug } from "src/utils/tempLink";
+
 
 export async function PUT(request: NextRequest,  { params }: { params: { slug: string }}) {
     try {
@@ -77,24 +79,8 @@ export async function DELETE(request: NextRequest,  { params }: { params: { slug
         const { user } = session;
         await dbConnect();
         console.log(params);
-        const link = await TempLink.findOne({
-            slug: params.slug,
-        });
-        if (!link) {
-            return NextResponse.json({
-                result: "fail",
-                message: "Link not found",
-                data: null
-            }, { status: 404 });
-        }
-        if (link.creator.toString() !== user._id?.toString()) {
-            return NextResponse.json({
-                result: "fail",
-                message: "You are not authorized to edit this link",
-                data: null
-            }, { status: 401 });
-        }
-        await link.deleteOne();
+
+        await DeleteLinkBySlug(params, user);
 
         return NextResponse.json({
             result: "success",

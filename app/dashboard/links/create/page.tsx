@@ -1,4 +1,4 @@
-import { CreateLinkForm } from "./create-link";
+import { CreateLinkForm } from "./create-form";
 
 
 export const metadata = {
@@ -7,6 +7,7 @@ export const metadata = {
 }
 
 
+import { RiLinksFill } from "react-icons/ri";
 
 export default async function CreateLinkPage() {
 
@@ -14,16 +15,19 @@ export default async function CreateLinkPage() {
 
 
     return (
-        <>
-            <h4 className="text-4xl font-semibold text-slate-900">
-                Create
-            </h4>
-            <p className="text-md font-regular  mt-5">
-                Create a new Shorten Link
+        <div>
+            <div className="flex items-center space-x-2">
+                <RiLinksFill className="text-2xl" />
+                <h1 className="text-2xl font-semibold text-slate-900">
+                    Create New Link
+                </h1>
+            </div>
+            <p className="text-md font-regular  mt-2">
+                Create a new short link or make opener link
             </p>
             <div className="p-5 border-t border-border mt-5">
                 <CreateLinkForm />
             </div>
-        </>
+        </div>
     )
 }

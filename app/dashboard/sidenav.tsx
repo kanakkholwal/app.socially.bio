@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { GrTransaction } from "react-icons/gr";
 import { IoAnalytics, IoLinkSharp } from "react-icons/io5";
 import { LuPlusCircle } from "react-icons/lu";
 import { RiLinksFill } from "react-icons/ri";
@@ -21,7 +22,7 @@ export type NavItem = {
 
 const nav_items :NavItem[] = [
     {
-        title: "Temp Link",
+        title: "Temporary Link",
         items:[
             {
                 name: "All Links",
@@ -40,7 +41,7 @@ const nav_items :NavItem[] = [
         items:[
             {
                 name: "Appearance",
-                href: "/dashboard/page/appearance",
+                href: "/dashboard/page",
                 icon:TbLayout2
             },
             {
@@ -52,6 +53,16 @@ const nav_items :NavItem[] = [
                 name: "Analytics",
                 href: "/dashboard/page/analytics",
                 icon:IoAnalytics
+            },
+        ]
+    },
+    {
+        title: "Actions",
+        items:[
+            {
+                name: "All Actions",
+                href: "/dashboard/actions",
+                icon:GrTransaction
             },
         ]
     },
