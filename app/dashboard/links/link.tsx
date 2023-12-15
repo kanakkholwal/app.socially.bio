@@ -16,7 +16,8 @@ export default function Item({ link }: {
     const [loading, setLoading] = React.useState(false);
 
 
-    return (<div className="flex flex-row justify-between items-center gap-3 mt-5 p-4 bg-slate-100 group rounded-lg border-transparent border border-dashed hover:border-tertiary/95 hover:bg-tertiary/10">
+    return (
+    <div className="flex flex-col xs:flex-row justify-between items-center gap-3 mt-5 p-4 bg-slate-100 group rounded-lg border-transparent border border-dashed hover:border-tertiary/95 hover:bg-tertiary/10">
         <div className="flex flex-col">
             <h6 className="text-md font-semibold text-slate-900 flex flex-row items-center gap-2">
                 {link.passwordProtected ? <MdLockOutline className="inline-block text-md  text-green-300 group-hover:text-green-600" /> : <MdLockOpen className="inline-block text-md text-primary/50 group-hover:text-primary" />}
@@ -34,7 +35,7 @@ export default function Item({ link }: {
                     className="inline-block ml-2 text-md text-slate-500 hover:text-slate-900 cursor-pointer" />
             </h6>
             <p className="text-sm font-regular text-slate-500 text-ellipsis overflow-hidden max-w-xl">{link.url}</p>
-            <div className="flex flex-row items-center gap-2 mt-2">
+            <div className="flex flex-row items-center gap-2 flex-wrap xs:flex-nowrap mt-2 w-full justify-start">
                 <span className="text-sm font-regular text-slate-500">
                     <GrView className="inline-block w-4 h-4 text-inherit text-slate-500 mr-1" />
 
@@ -60,8 +61,8 @@ export default function Item({ link }: {
                 </Button>
             </Link>
             <Button
-                variant="destructive"
                 size="sm"
+                className="bg-red-100 text-red-600 hover:bg-red-200"
                 disabled={loading}
                 onClick={() => {
                     setLoading(true);

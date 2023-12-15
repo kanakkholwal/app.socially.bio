@@ -59,7 +59,7 @@ export default function DashboardPage() {
             <p className="text-md font-regular  mt-5">
                 Welcome to your dashboard!
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4">
 
                 {quickAccess.map((item, index) => {
                     return (

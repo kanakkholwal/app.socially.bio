@@ -10,6 +10,8 @@ import {
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
+import { CgMenuLeftAlt } from "react-icons/cg";
 import { FaRegUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { VscChevronDown } from "react-icons/vsc";
@@ -17,9 +19,72 @@ import { SessionUserType } from "src/types/user";
 
 
 export default function Navbar({ user }: { user: SessionUserType }) {
+    console.log(user);
+
+    const togglerRef = useRef<HTMLButtonElement | null>(null);
+    useEffect(() => {
+        const toggler = togglerRef.current;
+        if (!toggler) return;
+
+        const sidenavClose = document.querySelector("#sidenavClose") as HTMLButtonElement | null;
+        if (!sidenavClose) return;
+        const sidenav = document.querySelector("#sidenav") as HTMLDivElement | null;
+        if (!sidenav) return;
+        const backdrop = document.querySelector("#backdrop") as HTMLDivElement | null;
+        if (!backdrop) return;
+
+        const closeSidenav = () => {
+            sidenav.classList.remove("open");
+            backdrop.classList.add("hidden");
+        }
+        const toggleSidenav = () => {
+            sidenav.classList.toggle("open");
+            backdrop.classList.toggle("hidden");
+        }
+        toggler.addEventListener("click", toggleSidenav);
+        sidenavClose.addEventListener("click", closeSidenav);
+        
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeSidenav();
+            }
+        })
+        document.addEventListener("mouseup", (e) => {
+            if (sidenav.classList.contains("open") && !sidenav.contains(e.target as Node)) {
+                closeSidenav();
+            }
+        })
+        backdrop.addEventListener("click", closeSidenav);
+
+
+
+        return () => {
+            toggler.removeEventListener("click", toggleSidenav);
+            sidenavClose.removeEventListener("click", closeSidenav);
+            document.removeEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    closeSidenav();
+                }
+            })
+            document.removeEventListener("mouseup", (e) => {
+                if (sidenav.classList.contains("open") && !sidenav.contains(e.target as Node)) {
+                    closeSidenav();
+                }
+            })
+            backdrop.removeEventListener("click", closeSidenav);
+
+
+        }
+    }, [])
+
     return (
         <nav className="flex justify-between items-center w-full h-20 bg-white border-b border-border px-4 py-3">
             <div className="relative">
+                <button ref={togglerRef} className="text-slate-500 hover:text-slate-800 lg:hidden">
+                    <CgMenuLeftAlt className="w-6 h-6" />
+                    <span className="sr-only">Open sidenav</span>
+                </button>
+
 
             </div>
             <div className="flex items-center gap-4">
