@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GrTransaction } from "react-icons/gr";
-import { IoAnalytics, IoLinkSharp } from "react-icons/io5";
+import { IoAnalytics, IoClose, IoLinkSharp } from "react-icons/io5";
 import { LuPlusCircle } from "react-icons/lu";
 import { RiLinksFill } from "react-icons/ri";
 import { RxDashboard } from "react-icons/rx";
@@ -71,11 +71,16 @@ const nav_items :NavItem[] = [
 export default function Sidenav() {
     const pathname = usePathname();
 
-    return (<div className="w-64 h-full bg-tertiary/5 backdrop-blur-lg sticky lg:relative top-0 left-0 bottom-0 z-10 min-h-screen border-r border-tertiary/10">
-        <div className="p-4">
+    return (<>
+    <div className="fixed lg:hidden inset-0 backdrop-blur-lg z-40 hidden" id="backdrop"></div>
+    <div id="sidenav" className="sidenav w-64 h-full bg-tertiary/5 backdrop-blur-lg fixed lg:relative top-0 left-0 bottom-0 z-50 overflow-y-auto min-h-screen border-r border-tertiary/10">
+        <div className="p-4 relative">
             <Link href="/dashboard" className="flex items-center justify-center">
-                <Image src="/socially-bio.svg" alt="Socially Bio" width={200} height={200} className="w-44 h-12 " priority/>
+                <Image src="/socially-bio.svg" alt="Socially Bio" width={200} height={200} className="w-44 h-12 user-select-none" draggable={false} priority/>
             </Link>
+            <button className="absolute top-1 right-1 hover:bg-tertiary/20 rounded-xl p-1 text-slate-600 hover:text-slate-800 lg:hidden" id="sidenavClose">
+                <IoClose className="w-4 h-4 text-inherit font-inherit"/>
+            </button>
         </div>
         <div className="p-4 space-y-4">
             <Link href="/dashboard" className={"py-2 px-4 rounded-3xl flex justify-start items-center gap-2 text text-slate-600 hover:text-slate-800 font-medium hover:bg-tertiary/20" + (pathname=== "/dashboard"? " text-slate-800 bg-tertiary/20":"")}>
@@ -102,5 +107,6 @@ export default function Sidenav() {
         </div>
 
 
-    </div>)
+    </div>
+    </>)
 }

@@ -218,3 +218,13 @@ a {
     text-decoration: none;
     background-color: transparent;
 }
+/* lg: */
+@media (max-width: 1024px) {
+    .sidenav {
+        translate: -100% 0%;
+        transition: all 0.3s ease-in-out;        
+    }
+    .sidenav.open {
+        translate: 0% 0%!important;
+    }
+}

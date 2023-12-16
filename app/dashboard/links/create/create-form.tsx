@@ -124,7 +124,7 @@ export function CreateLinkForm() {
                 <Label htmlFor="expiresAt">
                     Select a link Opener
                 </Label>
-                <div className="flex justify-start gap-3 w-full items-center  mt-3">
+                <div className="flex justify-start gap-3 w-full items-center flex-wrap  mt-3">
                     {openers.map((opener_type, i) => {
                         return (<button
                             onClick={() => {
