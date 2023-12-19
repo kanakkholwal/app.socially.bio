@@ -1,6 +1,9 @@
 import { TempLinkType } from 'src/types/tempLink';
 import InApp from './inapp'; // Import the detect-inapp package
 import { OPENERS } from './openers';
+import setups from './setup.constant';
+
+import Deeplink from "./browser-deeplink";
 
 interface appIdentifierType {
   isDesktop: boolean;
@@ -77,18 +80,59 @@ export default class LinkOpener<T extends TempLinkType> {
 
   private openInNonBrowser(appIdentifier: appIdentifierType, link: string, opener: string): void {
 
-    // const mobile_os_type = this.getMobileOperatingSystem();
-    // console.log("mobile_os_type", mobile_os_type)
-    // const platform = appIdentifier.browser;
-    // console.log("platform", platform)
-    // console.log(Object.keys(BROWSER).includes(platform))
-    // console.log(Object.keys(BROWSER))
+    const availableOpenerSetup = Object.keys(setups).find((item) => item.toLowerCase() === opener.toLowerCase()) 
+    if (availableOpenerSetup) {
+      const deeplink = new Deeplink(availableOpenerSetup)
+      deeplink.open(link)
+      return;
+    }
 
     this.openInApp(appIdentifier.browser, link, opener);
 
   }
   private openInApp(platform: string, link: string, opener: string): void {
     let appScheme = '';
+    const availableOpener = OPENERS.find((item) => item.id.toLowerCase() === opener.toLowerCase())
+    if (availableOpener && availableOpener.getOpener) {
+      appScheme = availableOpener.getOpener(link) || '';
+
+    }
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (appScheme) {
+      if (isIOS) {
+        window.location.href = appScheme; // Open in iOS app
+      } else {
+        const androidIntent = `intent://${appScheme}#Intent;scheme=${platform};package=com.${platform};S.browser_fallback_url=${encodeURIComponent(link)};end;`;
+        // const elemenent = document.createElement('a');
+        // elemenent.setAttribute('href', androidIntent);
+        // elemenent.setAttribute('target', '_blank')
+        // elemenent.setAttribute('style', 'display:none;');
+        // document.body.appendChild(elemenent);
+        // elemenent.click();
+        // window.location.href = androidIntent; // Open in Android app with fallback
+        // window.open(androidIntent, '_blank');
+        window.location.assign(androidIntent);
+
+      }
+    } else {
+      // If platform not found or unsupported, open in default browser
+      window.open(link, '_blank');
+    }
+  }
+  public openLinkInAppOrBrowser(): void {
+    const userAgent = navigator.userAgent || '';
+    const appIdentifier = this.detectInAppBrowser(userAgent);
+
+    if (appIdentifier.isDesktop && appIdentifier.browser) {
+      this.openInDefaultBrowser(this.linkData.url);
+    } else {
+      this.openInNonBrowser(appIdentifier, this.linkData.url, this.linkData.opener);
+    }
+  }
+
+}
+
 
     // switch (opener.toLowerCase()) {
     //   case 'instagram':
@@ -184,46 +228,6 @@ export default class LinkOpener<T extends TempLinkType> {
 
     //     break;
     // }
-    const availableOpener = OPENERS.find((item) => item.id.toLowerCase() === opener.toLowerCase())
-    if (availableOpener && availableOpener.getOpener) {
-      appScheme = availableOpener.getOpener(link) || '';
-
-    }
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-    if (appScheme) {
-      if (isIOS) {
-        window.location.href = appScheme; // Open in iOS app
-      } else {
-        const androidIntent = `intent://${appScheme}#Intent;scheme=${platform};package=com.${platform};S.browser_fallback_url=${encodeURIComponent(link)};end;`;
-        // const elemenent = document.createElement('a');
-        // elemenent.setAttribute('href', androidIntent);
-        // elemenent.setAttribute('target', '_blank')
-        // elemenent.setAttribute('style', 'display:none;');
-        // document.body.appendChild(elemenent);
-        // elemenent.click();
-        // window.location.href = androidIntent; // Open in Android app with fallback
-        // window.open(androidIntent, '_blank');
-        window.location.assign(androidIntent);
-
-      }
-    } else {
-      // If platform not found or unsupported, open in default browser
-      window.open(link, '_blank');
-    }
-  }
-  public openLinkInAppOrBrowser(): void {
-    const userAgent = navigator.userAgent || '';
-    const appIdentifier = this.detectInAppBrowser(userAgent);
-
-    if (appIdentifier.isDesktop && appIdentifier.browser) {
-      this.openInDefaultBrowser(this.linkData.url);
-    } else {
-      this.openInNonBrowser(appIdentifier, this.linkData.url, this.linkData.opener);
-    }
-  }
-
-}
 
 // const click_link = document.getElementById("abcd");
 // console.log(app_intend);
