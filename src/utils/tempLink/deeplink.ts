@@ -75,7 +75,7 @@ export default class LinkOpener<T extends TempLinkType> {
 
 
 
-  private openInNonBrowser(appIdentifier: appIdentifierType, link: string,opener:string): void {
+  private openInNonBrowser(appIdentifier: appIdentifierType, link: string, opener: string): void {
 
     // const mobile_os_type = this.getMobileOperatingSystem();
     // console.log("mobile_os_type", mobile_os_type)
@@ -84,12 +84,12 @@ export default class LinkOpener<T extends TempLinkType> {
     // console.log(Object.keys(BROWSER).includes(platform))
     // console.log(Object.keys(BROWSER))
 
-    this.openInApp(appIdentifier.browser, link,opener);
+    this.openInApp(appIdentifier.browser, link, opener);
 
   }
-  private openInApp(platform: string, link: string,opener:string): void {
+  private openInApp(platform: string, link: string, opener: string): void {
     let appScheme = '';
-    
+
     // switch (opener.toLowerCase()) {
     //   case 'instagram':
     //   appScheme = `instagram://user?username=${link}`;
@@ -181,13 +181,12 @@ export default class LinkOpener<T extends TempLinkType> {
     // //   break;
     //   // Add cases for other platforms as needed
     //   default:
-        
+
     //     break;
     // }
-
-    // Check if it's iOS
-    if(OPENERS.find((item)=>item.id.toLowerCase()=== opener.toLowerCase())){
-      appScheme = OPENERS.find((item)=>item.id.toLowerCase()=== opener.toLowerCase()).getOpener(link);
+    const availableOpener = OPENERS.find((item) => item.id.toLowerCase() === opener.toLowerCase())
+    if (availableOpener) {
+      appScheme = availableOpener.getOpener(link) || '';
 
     }
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -211,7 +210,7 @@ export default class LinkOpener<T extends TempLinkType> {
     if (appIdentifier.isDesktop && appIdentifier.browser) {
       this.openInDefaultBrowser(this.linkData.url);
     } else {
-      this.openInNonBrowser(appIdentifier, this.linkData.url,this.linkData.opener);
+      this.openInNonBrowser(appIdentifier, this.linkData.url, this.linkData.opener);
     }
   }
 
