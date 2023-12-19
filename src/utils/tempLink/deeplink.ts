@@ -185,7 +185,7 @@ export default class LinkOpener<T extends TempLinkType> {
     //     break;
     // }
     const availableOpener = OPENERS.find((item) => item.id.toLowerCase() === opener.toLowerCase())
-    if (availableOpener) {
+    if (availableOpener && availableOpener.getOpener) {
       appScheme = availableOpener.getOpener(link) || '';
 
     }
