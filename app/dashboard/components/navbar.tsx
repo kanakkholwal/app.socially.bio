@@ -16,6 +16,7 @@ import { FaRegUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { VscChevronDown } from "react-icons/vsc";
 import { SessionUserType } from "src/types/user";
+import Search from "./searchbar";
 
 
 export default function Navbar({ user }: { user: SessionUserType }) {
@@ -79,12 +80,12 @@ export default function Navbar({ user }: { user: SessionUserType }) {
 
     return (
         <nav className="flex justify-between items-center w-full h-20 bg-white border-b border-border px-4 py-3">
-            <div className="relative">
-                <button ref={togglerRef} className="text-slate-500 hover:text-slate-800 lg:hidden">
+            <div className="relative flex items-center">
+                <button ref={togglerRef} className="text-slate-500 hover:text-slate-800 lg:hidden mr-2">
                     <CgMenuLeftAlt className="w-6 h-6" />
                     <span className="sr-only">Open sidenav</span>
                 </button>
-
+                <Search />
 
             </div>
             <div className="flex items-center gap-4">

@@ -4,8 +4,8 @@ import { getServerSession } from "next-auth/next";
 import { Poppins } from "next/font/google";
 import { redirect } from "next/navigation";
 import { SessionType } from "src/types/session";
-import Navbar from "./navbar";
-import Sidenav from "./sidenav";
+import Navbar from "./components/navbar";
+import Sidenav from "./components/sidenav";
 
 const font = Poppins({
     weight: ["400", "500", "600", "700", "800"],
