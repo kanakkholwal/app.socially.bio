@@ -1,7 +1,7 @@
 import { TempLinkType } from 'src/types/tempLink';
 import InApp from './inapp'; // Import the detect-inapp package
 import { OPENERS } from './openers';
-import setups from './setup.constant';
+import { setups } from './setup.constant';
 
 import Deeplink from "./browser-deeplink";
 
