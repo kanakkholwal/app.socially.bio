@@ -2,71 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GrTransaction } from "react-icons/gr";
-import { IoAnalytics, IoClose, IoLinkSharp } from "react-icons/io5";
-import { LuPlusCircle } from "react-icons/lu";
-import { RiLinksFill } from "react-icons/ri";
+import { IoClose } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
-import { TbLayout2 } from "react-icons/tb";
-
-
-export type NavItem = {
-    title: string,
-    items: {
-        name: string,
-        href: string,
-        icon: React.ElementType
-    }[]
-
-}
-
-const nav_items :NavItem[] = [
-    {
-        title: "Temporary Link",
-        items:[
-            {
-                name: "All Links",
-                href: "/dashboard/links",
-                icon:RiLinksFill
-            },
-            {
-                name: "Add Link",
-                href: "/dashboard/links/create",
-                icon:LuPlusCircle
-            },
-        ]
-    },
-    {
-        title: "My Page",
-        items:[
-            {
-                name: "Appearance",
-                href: "/dashboard/page",
-                icon:TbLayout2
-            },
-            {
-                name: "Links",
-                href: "/dashboard/page/links",
-                icon:IoLinkSharp
-            },
-            {
-                name: "Analytics",
-                href: "/dashboard/page/analytics",
-                icon:IoAnalytics
-            },
-        ]
-    },
-    {
-        title: "Actions",
-        items:[
-            {
-                name: "All Actions",
-                href: "/dashboard/actions",
-                icon:GrTransaction
-            },
-        ]
-    },
-]
+import type { routeType } from "./routes.constants";
+import { routes } from "./routes.constants";
 
 export default function Sidenav() {
     const pathname = usePathname();
@@ -87,7 +26,7 @@ export default function Sidenav() {
                 <RxDashboard className="inline-block h-4 w-4 text-inherit font-inherit" /> Dashboard
             </Link>
             <div>
-                {nav_items.map((item, i) => {
+                {routes.map((item:routeType, i:number) => {
                     return (<div key={i} className="mb-3">
                         <h6 className="text-xs text-slate-700 uppercase font-semibold tracking-wider ml-4 mb-2">{item.title}</h6>
                         <ul className="space-y-1">

@@ -2,18 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import {signIn} from "next-auth/react"
 // import { FaApple } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { AiOutlineLoading } from "react-icons/ai";
 
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 const isEmail = (email: string) => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
+    const regex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    return regex.test(String(email).toLowerCase());
 }
 export function LoginForm() {
     const [email, setEmail] = useState("");
@@ -21,21 +21,60 @@ export function LoginForm() {
     const [passHide, setPassHide] = useState(true);
     const [isLoading, setLoading] = useState(false)
     const [error, setError] = useState("");
+    const router = useRouter();
 
-    const handleSubmit = async (e:any) => {
+    const signInPromise = async (data: {
+        email: string,
+        password: string
+    }) => new Promise(async (resolve, reject) => {
+        try {
+            signIn('credentials', {
+                email: data.email,
+                password: data.password,
+                redirect: false
+            }).then((data) => {
+                console.log(data);
+                if (data && data.ok === false) {
+                    reject(data.error);
+                    return;
+                }
+                else if (data && data.ok === true) {
+                    resolve(data);
+                    router.push(("/dashboard"));
+                    return;
+                }
+                resolve(data);
+            })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                }
+                )
+        }
+        catch (error) {
+            reject(error);
+        }
+    })
+
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true)
-        return signIn("credentials", {
-            email,
-            password,
-            redirect: false,
-            callbackUrl: "/dashboard",
-        }).then((res) => {
-            console.log(res)
-        }).catch((err) => {
-            console.log(err)
-        }).finally(()=>{
-            setLoading(false)
+     
+        toast.promise(signInPromise({
+            email: email,
+            password: password
+        }), {
+            loading: 'Logging in...',
+            success: (data) => {
+                console.log(data);
+                setLoading(false)
+                return `Logged in successfully`
+            },
+            error: (err) => {
+                console.log(err);
+                setLoading(false)
+                return err || "An error occurred while logging in"
+            }
         })
     }
 
@@ -67,29 +106,23 @@ export function LoginForm() {
         <div className="grid w-full max-w-lg items-center gap-1.5">
             <Button className="w-full rounded-full ease-linear hover:bg-black duration-300 text-base"
                 disabled={isLoading}
-                onClick={(e)=>{
+                onClick={(e) => {
                     e.preventDefault();
                     // check email with regex 
                     // check password length
                     // check password with regex
-                    if(!isEmail(email)){
+                    if (!isEmail(email)) {
                         setError("Please enter a valid email address")
                         toast.error("Please enter a valid email address")
                         return;
                     }
-                    if(password.length < 8){
+                    if (password.length < 8) {
                         setError("Password must be at least 8 characters long")
                         toast.error("Password must be at least 8 characters long")
                         return;
                     }
+                    handleSubmit(e)
 
-                    toast.promise(handleSubmit(e),{
-                        loading: "Logging you in...",
-                        success: "Logged in successfully",
-                        error: "Error logging in"
-                    })
-
-                    
                 }}
                 size="lg">
                 Log in to your Account
@@ -100,18 +133,18 @@ export function LoginForm() {
                 OR SIGN IN WITH
             </p>
             <div className="w-full max-w-lg flex flex-col gap-3">
-                <Button 
-                onClick={()=>{
-                    toast.promise(signIn("google", {
-                        callbackUrl: "/dashboard",
-                    }),{
-                        loading: "Logging you in...",
-                        success: "Logged in successfully",
-                        error: "Error logging in"
-                    })
-                }}
-                disabled={isLoading}
-                className="rounded-full ease-linear  duration-300 text-base font-medium text-slate-900 bg-white hover:bg-slate-100 border border-solid border-border shadow-lg shadow-slate-200" size="lg">
+                <Button
+                    onClick={() => {
+                        toast.promise(signIn("google", {
+                            callbackUrl: "/dashboard",
+                        }), {
+                            loading: "Logging you in...",
+                            success: "Logged in successfully",
+                            error: "Error logging in"
+                        })
+                    }}
+                    disabled={isLoading}
+                    className="rounded-full ease-linear  duration-300 text-base font-medium text-slate-900 bg-white hover:bg-slate-100 border border-solid border-border shadow-lg shadow-slate-200" size="lg">
                     <FcGoogle className="mr-2 h-6 w-6" />
                     Continue with Google
                 </Button>

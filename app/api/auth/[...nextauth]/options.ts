@@ -100,7 +100,7 @@ export const authOptions: NextAuthOptions = {
                         const pwValid = await userInDb.comparePassword(credentials.password);
                     
                         if (!pwValid) 
-                            reject({
+                        return  reject({
                                 status: 401,
                                 message: "Wrong Password",
                                 success: false
@@ -120,13 +120,13 @@ export const authOptions: NextAuthOptions = {
                         
 
                         console.log("user found",user)
-                        resolve(user)
+                        return resolve(user)
 
                     }
                     catch (err) {
 
                         console.log(err)
-                        reject(err)
+                        return reject(err)
                     }
                 })
 
