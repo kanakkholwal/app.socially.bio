@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { TempLinkType } from "src/types/tempLink";
 import LinkOpener from "src/utils/tempLink/deeplink";
 
@@ -35,6 +36,12 @@ export default function OpenerPage({tempLink}:{
 
     }
     }>Open Link</Button>
+    
+  <Link
+    href={tempLink.url}
+    target="_blank"
+    
+      >Open Link</Link>
     
   </CardFooter>
 </Card>
