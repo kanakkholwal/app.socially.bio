@@ -1,5 +1,5 @@
 
-export default setup = {
+export  const setups ={
     "twitter": {
       iOS: {
         appName: 'Twitter',
