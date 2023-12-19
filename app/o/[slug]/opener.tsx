@@ -1,15 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { TempLinkType } from "src/types/tempLink";
-import LinkOpener from "src/utils/deeplink";
+import LinkOpener from "src/utils/tempLink/deeplink";
 
 export default function OpenerPage({tempLink}:{
     tempLink: TempLinkType
