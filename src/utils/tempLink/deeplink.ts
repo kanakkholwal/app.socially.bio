@@ -196,14 +196,15 @@ export default class LinkOpener<T extends TempLinkType> {
         window.location.href = appScheme; // Open in iOS app
       } else {
         const androidIntent = `intent://${appScheme}#Intent;scheme=${platform};package=com.${platform};S.browser_fallback_url=${encodeURIComponent(link)};end;`;
-        const elemenent = document.createElement('a');
-        elemenent.setAttribute('href', androidIntent);
-        elemenent.setAttribute('target', '_blank')
-        elemenent.setAttribute('style', 'display:none;');
-        document.body.appendChild(elemenent);
-        elemenent.click();
+        // const elemenent = document.createElement('a');
+        // elemenent.setAttribute('href', androidIntent);
+        // elemenent.setAttribute('target', '_blank')
+        // elemenent.setAttribute('style', 'display:none;');
+        // document.body.appendChild(elemenent);
+        // elemenent.click();
         // window.location.href = androidIntent; // Open in Android app with fallback
-        window.open(androidIntent, '_blank');
+        // window.open(androidIntent, '_blank');
+        window.location.assign(androidIntent);
 
       }
     } else {
