@@ -1,6 +1,13 @@
 import { TempLinkType } from 'src/types/tempLink';
-import InApp from './inapp'; // Import the detect-inapp package
+import InApp, { BROWSER } from './inapp'; // Import the detect-inapp package
 
+interface appIdentifierType {
+  isDesktop: boolean;
+  isMobile: boolean;
+  isInApp: boolean;
+  browser: string;
+  ua: string;
+}
 export default class LinkOpener<T extends TempLinkType> {
   private linkData: T;
 
@@ -41,69 +48,141 @@ export default class LinkOpener<T extends TempLinkType> {
     return 'other';
   }
 
-  private detectInAppBrowser(userAgent: string): string {
+  private detectInAppBrowser(userAgent: string): appIdentifierType {
     const inapp = new InApp(userAgent);
-    
-    console.log("isInApp", inapp.isInApp, "browser", inapp.browser, "ua", inapp.ua, "isMobile", inapp.isMobile, "isDesktop", inapp.isDesktop)
-    if (inapp.isInApp) {
-      switch (inapp.browser) {
-        case 'instagram':
-          return 'is_instagram_ios';
-        case 'facebook':
-          return 'is_facebook_ios';
-        case 'twitter':
-          return 'is_twitter_ios';
-        // Add cases for other apps
-        default:
-          return 'is_other_inapp_ios';
-      }
+
+
+    // console.log("isInApp", inapp.isInApp)
+    // console.log("browser", inapp.browser)
+    // console.log("ua", inapp.ua)
+    // console.log("isMobile", inapp.isMobile)
+    // console.log("isDesktop", inapp.isDesktop)
+    // console.log(Object.keys(BROWSER))
+    return {
+      isDesktop: inapp.isDesktop,
+      isMobile: inapp.isMobile,
+      isInApp: inapp.isInApp,
+      browser: inapp.browser,
+      ua: inapp.ua,
+    }
   }
-    return '';
-}
 
   private openInDefaultBrowser(link: string): void {
     window.open(link, '_blank');
   }
 
-  private openInApp(appIdentifier: string, link: string): void {
-    // const click_link = document.getElementById("abcd");
-    // console.log(app_intend);
-    // if (app_intend === "Desktop" || app_intend === "Mobile") {
-    //   app_intend = originalURL;
-    // }
-    // if (this.state.ostype == "windows") {
-    //   click_link.setAttribute("href", app_intend);
-    //   click_link.click();
-    //   //console.log("hello")
-    // } else {
-    //   click_link.setAttribute("href", app_intend);
-    //   window.location.assign(app_intend);
-    // }
-    switch (appIdentifier) {
-      case 'is_instagram_ios':
-        window.location.href = `instagram://user?username=${link}`;
-        break;
-      case 'is_facebook_ios':
-        window.location.href = `facebook://profile/${link}`;
-        break;
-      // Add cases for other apps
+
+
+  private openInNonBrowser(appIdentifier: appIdentifierType, link: string): void {
+
+    const mobile_os_type = this.getMobileOperatingSystem();
+    console.log("mobile_os_type", mobile_os_type)
+    const platform = appIdentifier.browser;
+    console.log("platform", platform)
+    console.log(Object.keys(BROWSER).includes(platform))
+    console.log(Object.keys(BROWSER))
+
+    this.openInApp(appIdentifier.browser, link);
+
+  }
+  private openInApp(platform: string, link: string): void {
+    let appScheme = '';
+
+    switch (platform.toLowerCase()) {
+      case 'instagram':
+      appScheme = `instagram://user?username=${link}`;
+      break;
+    case 'youtube':
+      appScheme = `vnd.youtube://${link}`;
+      break;
+    case 'facebook':
+      appScheme = `fb://profile/${link}`;
+      break;
+    case 'twitter':
+      appScheme = `twitter://user?screen_name=${link}`;
+      break;
+    case 'slack':
+      appScheme = `slack://channel?team=${link}`;
+      break;
+    case 'discord':
+      appScheme = `discord://server/${link}`;
+      break;
+    // Newly added apps
+    case 'messenger':
+      appScheme = `fb-messenger://user-thread/${link}`;
+      break;
+    case 'line':
+      appScheme = `line://msg/text/${link}`;
+      break;
+    case 'wechat':
+      appScheme = `weixin://dl/chat?${link}`;
+      break;
+    case 'puffin':
+      appScheme = `puffin://navigate?url=${link}`;
+      break;
+    case 'miui':
+      appScheme = `miuipro://navigate?url=${link}`;
+      break;
+    case 'pinterest':
+      appScheme = `pinterest://pin/${link}`;
+      break;
+    case 'chrome':
+      appScheme = `googlechrome://${link}`;
+      break;
+    case 'safari':
+      appScheme = `safari://open?url=${link}`;
+      break;
+    case 'ie':
+      appScheme = `microsoft-edge:${link}`;
+      break;
+    case 'firefox':
+      appScheme = `firefox://open-url?url=${link}`;
+      break;
+      // Add cases for other platforms as needed
       default:
-        // Open link in default browser
-        window.open(link, '_blank');
+        
         break;
     }
-  }
 
+    // Check if it's iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (appScheme) {
+      if (isIOS) {
+        window.location.href = appScheme; // Open in iOS app
+      } else {
+        const androidIntent = `intent://${appScheme}#Intent;scheme=${platform};package=com.${platform};S.browser_fallback_url=${encodeURIComponent(link)};end;`;
+        window.location.href = androidIntent; // Open in Android app with fallback
+      }
+    } else {
+      // If platform not found or unsupported, open in default browser
+      window.open(link, '_blank');
+    }
+  }
   public openLinkInAppOrBrowser(): void {
     const userAgent = navigator.userAgent || '';
     const appIdentifier = this.detectInAppBrowser(userAgent);
 
-    if (appIdentifier && appIdentifier.startsWith('is_')) {
-      this.openInApp(appIdentifier, this.linkData.url);
-    } else {
+    if (appIdentifier.isDesktop && appIdentifier.browser) {
       this.openInDefaultBrowser(this.linkData.url);
+    } else {
+      this.openInNonBrowser(appIdentifier, this.linkData.url);
     }
   }
-  
+
 }
 
+
+// const click_link = document.getElementById("abcd");
+// console.log(app_intend);
+// if (app_intend === "Desktop" || app_intend === "Mobile") {
+//   app_intend = originalURL;
+// }
+// if (this.state.ostype == "windows") {
+//   click_link.setAttribute("href", app_intend);
+//   click_link.click();
+//   //console.log("hello")
+// } else {
+//   click_link.setAttribute("href", app_intend);
+//   window.location.assign(app_intend);
+// }
