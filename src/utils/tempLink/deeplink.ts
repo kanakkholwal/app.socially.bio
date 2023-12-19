@@ -203,6 +203,8 @@ export default class LinkOpener<T extends TempLinkType> {
         document.body.appendChild(elemenent);
         elemenent.click();
         // window.location.href = androidIntent; // Open in Android app with fallback
+        window.open(androidIntent, '_blank');
+
       }
     } else {
       // If platform not found or unsupported, open in default browser
