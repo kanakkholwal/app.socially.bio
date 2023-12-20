@@ -173,6 +173,7 @@ export function RegisterForm({ validateEmail, validateUsername }: Props) {
                 
             }}
             size="lg">
+                {loading && <CgSpinner className="animate-spin mr-2 h-5 w-5" />}
                 Create a new Account
             </Button>
         </div>
@@ -182,7 +183,8 @@ export function RegisterForm({ validateEmail, validateUsername }: Props) {
             </p>
             <div className="w-full max-w-lg flex flex-col gap-3">
                 <Button className="rounded-full ease-linear  duration-300 text-base font-medium text-slate-900 bg-white hover:bg-slate-100 border border-solid border-border shadow-lg shadow-slate-200" size="lg">
-                    <FcGoogle className="mr-2 h-6 w-6" />
+                    {loading ?   <CgSpinner className="animate-spin mr-2 h-5 w-5" />:<FcGoogle className="mr-2 h-6 w-6" />}
+                    
                     Sign up with Google
                 </Button>
                 {/* <Button className="rounded-full ease-linear duration-300 text-base font-medium text-slate-100 bg-slate-700 hover:bg-slate-800 shadow-lg" size="lg">

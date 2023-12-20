@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { SessionUserType } from 'src/types/user';
-import Profile from './profile';
+import Profile from './account/account';
 import QrCode from './qr-code';
 
 import { createUrl } from "src/utils/router";

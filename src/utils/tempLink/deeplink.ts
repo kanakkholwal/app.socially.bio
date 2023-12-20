@@ -1,9 +1,7 @@
 import { TempLinkType } from 'src/types/tempLink';
 import InApp from './inapp'; // Import the detect-inapp package
 import { OPENERS } from './openers';
-import { setups } from './setup.constant';
 
-import Deeplink from "./browser-deeplink";
 
 interface appIdentifierType {
   isDesktop: boolean;
@@ -80,14 +78,17 @@ export default class LinkOpener<T extends TempLinkType> {
 
   private openInNonBrowser(appIdentifier: appIdentifierType, link: string, opener: string): void {
 
-    const availableOpenerSetup = Object.keys(setups).find((item) => item.toLowerCase() === opener.toLowerCase()) 
-    if (availableOpenerSetup) {
-      const deeplink = new Deeplink(availableOpenerSetup)
-      deeplink.open(link)
-      return;
-    }
-
-    this.openInApp(appIdentifier.browser, link, opener);
+    // const availableOpenerSetupKey = Object.keys(setups).find((item) => item.toLowerCase() === opener.toLowerCase()) 
+    // if (availableOpenerSetupKey) {
+    //   console.log("availableOpenerSetup",setups[availableOpenerSetupKey])
+    //   console.log("opener",opener)
+    //   const deeplink = new Deeplink(setups[availableOpenerSetupKey])
+    //   deeplink.open(link,opener)
+    // } else{
+      // }
+      // console.log("appIdentifier",appIdentifier)
+      this.openInApp(appIdentifier.browser, link, opener);
+    
 
   }
   private openInApp(platform: string, link: string, opener: string): void {
@@ -95,12 +96,14 @@ export default class LinkOpener<T extends TempLinkType> {
     const availableOpener = OPENERS.find((item) => item.id.toLowerCase() === opener.toLowerCase())
     if (availableOpener && availableOpener.getOpener) {
       appScheme = availableOpener.getOpener(link) || '';
+      console.log("Going to open", appScheme)
+      window.location.assign(appScheme)
 
+      return;
     }
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     if (appScheme) {
-      if (isIOS) {
+      if (this.isIOS()) {
         window.location.href = appScheme; // Open in iOS app
       } else {
         const androidIntent = `intent://${appScheme}#Intent;scheme=${platform};package=com.${platform};S.browser_fallback_url=${encodeURIComponent(link)};end;`;
@@ -112,7 +115,7 @@ export default class LinkOpener<T extends TempLinkType> {
         // elemenent.click();
         // window.location.href = androidIntent; // Open in Android app with fallback
         // window.open(androidIntent, '_blank');
-        window.location.assign(androidIntent);
+        window.location.assign(androidIntent)
 
       }
     } else {

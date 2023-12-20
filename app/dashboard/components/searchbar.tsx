@@ -29,14 +29,14 @@ export default function Search() {
     }, [])
 
     return (
-        <div className="w-full flex-1 md:w-auto md:flex-none">
+        <div className="w-full flex-1 md:w-auto md:flex-none" >
             <button role="button"
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     setOpen((open) => !open)
-
                 }}
+                title="Search (⌘J)"
                 className="inline-flex items-center whitespace-nowrap rounded-3xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-transparent border-dashed bg-slate-100 shadow-sm  hover:border-tertiary  h-9 px-4 py-2 relative justify-start text-sm text-muted-foreground sm:pr-12  max-w-full w-64 lg:w-96">
                 <span className="hidden lg:inline-flex">Search Anything...</span>
                 <span className="inline-flex lg:hidden">Search...</span>

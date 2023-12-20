@@ -58,15 +58,21 @@ export default class Deeplink {
   }
 
   isAndroid() {
-    return !!navigator.userAgent.match('Android');
+    const { userAgent } = navigator;
+
+    return /android/i.test(userAgent)
   }
 
   isIOS() {
-    return !!(
-      navigator.userAgent.match('iPad') ||
-      navigator.userAgent.match('iPhone') ||
-      navigator.userAgent.match('iPod')
-    );
+    const { userAgent } = navigator;
+    return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod',
+    ].includes(navigator.platform) || (userAgent.includes('Mac') && 'ontouchend' in document);
   }
 
   isMobile() {
@@ -90,7 +96,7 @@ export default class Deeplink {
     if (this.isIOS()) this.settings.platform = 'ios';
   }
 
-  open(uri) {
+  open(uri,opener) {
     let timeout = null;
 
     if (!this.isMobile()) {
@@ -104,7 +110,7 @@ export default class Deeplink {
     if (this.isAndroid() && !navigator.userAgent.match(/Firefox/)) {
       const matches = uri.match(/([^:]+):\/\/(.+)$/i);
       if (matches) {
-        uri = `intent://${matches[2]}#Intent;scheme=${matches[1]}`;
+        uri = `intent://${opener ?? matches[2]}#Intent;scheme=${matches[1]}`;
         uri += `;package=${this.settings.android.appId};end`;
       }
     }
@@ -130,21 +136,21 @@ export default class Deeplink {
   }
 }
 
-// Usage:
-const deeplink = new Deeplink({
-  iOS: {
-    appName: 'YouriOSAppName',
-    appId: 'YouriOSAppID',
-  },
-  android: {
-    appId: 'YourAndroidAppID',
-  },
-  androidDisabled: false,
-  fallback: true,
-  fallbackToWeb: false,
-  delay: 1000,
-  delta: 500,
-});
+// // Usage:
+// const deeplink = new Deeplink({
+//   iOS: {
+//     appName: 'YouriOSAppName',
+//     appId: 'YouriOSAppID',
+//   },
+//   android: {
+//     appId: 'YourAndroidAppID',
+//   },
+//   androidDisabled: false,
+//   fallback: true,
+//   fallbackToWeb: false,
+//   delay: 1000,
+//   delta: 500,
+// });
 
 // Then use the open method passing your deeplink URI
-deeplink.open('your-deeplink-uri');
+// deeplink.open('your-deeplink-uri');
