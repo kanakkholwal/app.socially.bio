@@ -10,17 +10,19 @@ import {
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { FaRegUser } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
 import { VscChevronDown } from "react-icons/vsc";
 import { SessionUserType } from "src/types/user";
 import Search from "./searchbar";
 
-
 export default function Navbar({ user }: { user: SessionUserType }) {
     console.log(user);
+    const router = useRouter();
 
     const togglerRef = useRef<HTMLButtonElement | null>(null);
     useEffect(() => {
@@ -80,10 +82,19 @@ export default function Navbar({ user }: { user: SessionUserType }) {
 
     return (
         <nav className="flex justify-between items-center w-full h-20 bg-white border-b border-border px-4 py-3">
-            <div className="relative flex items-center">
-                <button ref={togglerRef} className="text-slate-500 hover:text-slate-800 lg:hidden mr-2">
+            <div className="relative flex items-center gap-2">
+                <button ref={togglerRef} className="text-slate-500 hover:text-slate-800 lg:hidden">
                     <CgMenuLeftAlt className="w-6 h-6" />
                     <span className="sr-only">Open sidenav</span>
+                </button>
+                <button 
+                onClick={()=>{
+                    router.back();
+                }}
+                title="Go Back"
+                className="text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded-full p-1 ">
+                    <IoIosArrowBack className="w-5 h-5" />
+                    <span className="sr-only">Go Back</span>
                 </button>
                 <Search />
 
@@ -100,12 +111,12 @@ export default function Navbar({ user }: { user: SessionUserType }) {
                     <DropdownMenuContent sideOffset={15} align="end">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
                             <Link href={"/dashboard/settings?defaultTabprofile=profile"} className="w-full text-accent-foreground hover:text-slate-800">
+                        <DropdownMenuItem>
                                 <FaRegUser className="w-3 h-3 mr-1" />
                                 Profile
-                            </Link>
                         </DropdownMenuItem>
+                            </Link>
                         <DropdownMenuItem asChild>
                             <button onClick={(e) => {
                                 e.preventDefault();

@@ -1,9 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
     Card,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
@@ -14,6 +12,13 @@ import { RiLinksFill } from "react-icons/ri";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 
 const quickAccess = [
+    {
+        title: "Create Links",
+        description: "Create links for your page",
+        link: "/dashboard/links",
+        status: "available",
+        icon: RiLinksFill
+    },
     {
         title: "Page Appearance",
         description: "Change the appearance of your page",
@@ -27,13 +32,6 @@ const quickAccess = [
         link: "/dashboard/analytics",
         status: "comming-soon",
         icon: TbBrandGoogleAnalytics
-    },
-    {
-        title: "Create Links",
-        description: "Create links for your page",
-        link: "/dashboard/links",
-        status: "available",
-        icon: RiLinksFill
     },
     {
         title: "Create Actions",
@@ -59,13 +57,15 @@ export default function DashboardPage() {
             <p className="text-md font-regular  mt-5">
                 Welcome to your dashboard!
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4">
+            <div className="grid grid-rows-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4 ">
 
                 {quickAccess.map((item, index) => {
-                    return (
-                        <Card key={index} className={"hover:shadow-xl hover:shadow-slate-200 " + (item.status !== "available" ? "cursor-not-allowed" : "")}>
+                    return (<Link href={item.link} key={index} className={(item.status !== "available" ? "cursor-not-allowed pointer-events-none" : "")} >
+                        <Card
+                        className={"shadow-[0px_9px_20px] rouned-xl group  shadow-slate-200 hover:border-primary hover:shadow-primary/20" + (item.status !== "available" ? "cursor-not-allowed pointer-events-none" : "")}
+                        >
                             <CardHeader className="flex gap-3 flex-row items-stretch">
-                                <div className="bg-tertiary/20 rounded-full p-3 h-16 w-16 flex items-center justify-center">
+                                <div className="bg-tertiary/20 rounded-full p-3 h-16 w-16 flex items-center justify-center group-hover:bg-primary/20">
                                     <item.icon className="w-6 h-6" />
 
                                 </div>
@@ -74,20 +74,8 @@ export default function DashboardPage() {
                                     <CardDescription>{item.description}</CardDescription>
                                 </div>
                             </CardHeader>
-                            <CardFooter className="justify-end">
-
-                                {item.status === "available" ? <Link href={item.link}>
-                                    <Button size="sm" className={item.status === "available" ? "hover:bg-black duration-300 " : "bg-primary/20 cursor-not-allowed"} disabled={item.status !== "available"} >
-                                        View Service
-                                    </Button>
-                                </Link> :
-                                    <Button size="sm"  disabled={true} >
-                                        View Service
-                                    </Button>}
-
-                            </CardFooter>
                         </Card>
-                    )
+                    </Link>)
                 })}
 
 

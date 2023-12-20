@@ -1,10 +1,12 @@
 import { BsQrCodeScan } from "react-icons/bs";
 import { GrTransaction } from "react-icons/gr";
-import { IoAnalytics, IoClose, IoLinkSharp } from "react-icons/io5";
+import { IoAnalytics, IoLinkSharp } from "react-icons/io5";
 import { LuPlusCircle } from "react-icons/lu";
-import { RiLinksFill } from "react-icons/ri";
-import { RxDashboard } from "react-icons/rx";
+import { RiLinksFill, RiUserSettingsLine } from "react-icons/ri";
 import { TbLayout2 } from "react-icons/tb";
+
+
+
 export type routeType = {
     title: string,
     items: {
@@ -25,7 +27,7 @@ export const routes :routeType[] = [
                 icon:RiLinksFill
             },
             {
-                name: "Add Link",
+                name: "Create New",
                 href: "/dashboard/links/create",
                 icon:LuPlusCircle
             },
@@ -66,8 +68,13 @@ export const routes :routeType[] = [
         items:[
             {
                 name: "QR Code",
-                href: "/dashboard/settings?view=qrcode",
+                href: "/dashboard/settings/qrcode",
                 icon:BsQrCodeScan
+            },
+            {
+                name: "Account",
+                href: "/dashboard/settings/account",
+                icon:RiUserSettingsLine
             },
         ]
     },

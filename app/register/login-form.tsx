@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 // import { FaApple } from "react-icons/fa";
+import { CgSpinnerAlt } from "react-icons/cg";
 import { FcGoogle } from "react-icons/fc";
 
 import { useRouter } from "next/navigation";
@@ -59,7 +60,7 @@ export function LoginForm() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true)
-     
+
         toast.promise(signInPromise({
             email: email,
             password: password
@@ -125,6 +126,7 @@ export function LoginForm() {
 
                 }}
                 size="lg">
+                {isLoading && <CgSpinnerAlt className="animate-spin mr-2 h-5 w-5" />}
                 Log in to your Account
             </Button>
         </div>
@@ -145,7 +147,8 @@ export function LoginForm() {
                     }}
                     disabled={isLoading}
                     className="rounded-full ease-linear  duration-300 text-base font-medium text-slate-900 bg-white hover:bg-slate-100 border border-solid border-border shadow-lg shadow-slate-200" size="lg">
-                    <FcGoogle className="mr-2 h-6 w-6" />
+                    {isLoading ? <CgSpinnerAlt className="animate-spin mr-2 h-5 w-5" /> : <FcGoogle className="mr-2 h-6 w-6" />}
+
                     Continue with Google
                 </Button>
                 {/* <Button className="rounded-full ease-linear duration-300 text-base font-medium text-slate-100 bg-slate-700 hover:bg-slate-800 shadow-lg" size="lg">

@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Dialog,
@@ -24,9 +26,10 @@ import { BiLockAlt } from "react-icons/bi";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { LuImage, LuMail } from "react-icons/lu";
 import { PiCrownSimpleBold } from "react-icons/pi";
+
 const DEFAULT_PROFILE_URL = "https://res.cloudinary.com/nexonauts/image/upload/v1680632194/kkupgrader/placeholder_rwezi6.png"
 
-export default function Profile({ user: CurrentUser }:{
+export default function Profile({ user: CurrentUser }: {
     user: SessionUserType
 }) {
     const [user, setUser] = useState(CurrentUser);
@@ -36,7 +39,7 @@ export default function Profile({ user: CurrentUser }:{
     const [imageStatus, setImageStatus] = useState("idle" as "idle" | "loading" | "success" | "error");
 
 
-    const handleFiles = async (file:File) => {
+    const handleFiles = async (file: File) => {
         const formData = new FormData();
         formData.append('file', file);
         const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
@@ -141,7 +144,7 @@ export default function Profile({ user: CurrentUser }:{
         })
     }
 
-    function isImageURLValid(url:string) {
+    function isImageURLValid(url: string) {
         return fetch(url)
             .then((response) => {
                 // Check if the HTTP status code is in the 200 range (success)
@@ -162,13 +165,14 @@ export default function Profile({ user: CurrentUser }:{
 
 
     return (
-        <div className="space-y-6">
-            <div>
-                <h3 className="text-lg font-medium">Profile</h3>
-                <p className="text-sm text-muted-foreground">
+        <div className="space-y-6 p-10 pb-16 w-full">
+            <div className="space-y-0.5">
+                <h2 className="text-2xl font-bold tracking-tight">Account</h2>
+                <p className="text-muted-foreground">
                     This is how you or others will see you on the site.
                 </p>
             </div>
+
             <Separator />
             <div className="flex items-center justify-between gap-2 w-full mb-5">
                 <div className=" flex items-center gap-2">
@@ -187,7 +191,7 @@ export default function Profile({ user: CurrentUser }:{
                         <DialogTrigger asChild>
                             <Button size="sm"
                             //  variant="slate"
-                             >
+                            >
                                 Upload new photo
                             </Button>
                         </DialogTrigger>
@@ -255,23 +259,23 @@ export default function Profile({ user: CurrentUser }:{
                                 </div>
 
                                 <Button size="sm"
-                                //  variant="slate"
-                                  onClick={() => {
-                                    try {
-                                        update({
-                                            ...session,
-                                            user: {
-                                                ...CurrentUser,
-                                                profileURL: user.profilePicture
-                                            }
-                                        })
-                                        toast.success("Profile picture updated successfully");
-                                    }
-                                    catch (err) {
-                                        console.log(err);
-                                        toast.error("Something went wrong");
-                                    }
-                                }}
+                                    //  variant="slate"
+                                    onClick={() => {
+                                        try {
+                                            update({
+                                                ...session,
+                                                user: {
+                                                    ...CurrentUser,
+                                                    profileURL: user.profilePicture
+                                                }
+                                            })
+                                            toast.success("Profile picture updated successfully");
+                                        }
+                                        catch (err) {
+                                            console.log(err);
+                                            toast.error("Something went wrong");
+                                        }
+                                    }}
                                     disabled={imageStatus === "loading" || imageStatus === "error" || user?.profilePicture === DEFAULT_PROFILE_URL}
                                 >
 
@@ -282,11 +286,11 @@ export default function Profile({ user: CurrentUser }:{
                         </DialogContent>
                     </Dialog>
 
-                    <Button size="sm" 
-                    // variant="slate"
-                     onClick={() => {
-                        setUser({ ...user, profilePicture: DEFAULT_PROFILE_URL })
-                    }}>
+                    <Button size="sm"
+                        // variant="slate"
+                        onClick={() => {
+                            setUser({ ...user, profilePicture: DEFAULT_PROFILE_URL })
+                        }}>
                         Remove photo
                     </Button>
                 </div>
@@ -307,7 +311,7 @@ export default function Profile({ user: CurrentUser }:{
                     />
                     <Button size="sm"
                     //  variant="slate"
-                     >
+                    >
                         Save
                     </Button>
                 </div>
@@ -388,7 +392,7 @@ export default function Profile({ user: CurrentUser }:{
                             variant="fluid"
                         />
                     </div>
-                    <Button size="sm" 
+                    <Button size="sm"
                         onClick={changePassword}
 
                         disabled={currentPassword === confirmPassword || currentPassword.trim() === "" || confirmPassword.trim().length < 6}>
