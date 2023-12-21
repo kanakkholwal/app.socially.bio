@@ -1,17 +1,18 @@
 import bcrypt from 'bcrypt';
 import mongoose from "mongoose";
-import { v4 as UuID4 } from 'uuid';
+import { customAlphabet } from 'nanoid';
 import validator from 'validator';
+
+const generateUrlSlug = (length= 8) => customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", length)();
 
 function generateRandomUsername() {
   // Generate a random UUID
-  const uuid = UuID4();
 
   // Take the first 10 characters of the UUID and remove any non-alphanumeric characters
-  const alphanumericUsername = uuid.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);
+  const alphanumericUsername = generateUrlSlug().replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);
 
   // Add a prefix (e.g., 'user_') to the alphanumeric username
-  return `user-${alphanumericUsername}`;
+  return `user_${alphanumericUsername}`;
 }
 const UserSchema = new mongoose.Schema(
   {

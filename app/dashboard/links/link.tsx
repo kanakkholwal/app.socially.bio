@@ -45,7 +45,7 @@ export default function Item({ link }: {
                     Clicks: {link.hits}</span>
                 <span className="text-sm font-regular text-slate-500">
                     <MdUpdate className="inline-block w-4 h-4 text-inherit text-slate-500 mr-1" />
-                    Expires at {new Date(link.expiresAt).toLocaleDateString()}
+                    Expires at {new Date(link.expiresAt).toLocaleTimeString()}
                 
                     </span>
 

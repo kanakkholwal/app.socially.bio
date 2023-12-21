@@ -148,7 +148,7 @@ export const authOptions: NextAuthOptions = {
                     await dbConnect();
                     const userInDb = await UserModel.findOne({ email: profile.email })
                     if (!userInDb) {
-
+                        console.log("user not found, creating new user", profile)
                         const user = new UserModel({
                             name: profile.name,
                             email: profile.email,
@@ -165,6 +165,13 @@ export const authOptions: NextAuthOptions = {
 
                         return Promise.resolve(user);
                     }
+                    console.log("user found", userInDb)
+                    await UserModel.updateOne({ _id: userInDb._id }, {
+                        $set: {
+                            profilePicture: profile.picture,
+                            verified: true,
+                        }
+                    })
 
 
                     return Promise.resolve(userInDb)
