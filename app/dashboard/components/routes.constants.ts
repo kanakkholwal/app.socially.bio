@@ -1,11 +1,13 @@
 import { BsQrCodeScan } from "react-icons/bs";
 import { GrTransaction } from "react-icons/gr";
-import { IoAnalytics, IoLinkSharp } from "react-icons/io5";
+import { IoAnalytics } from "react-icons/io5";
 import { LuPlusCircle } from "react-icons/lu";
 import { RiLinksFill, RiUserSettingsLine } from "react-icons/ri";
 import { TbLayout2 } from "react-icons/tb";
 
+import { CgFeed } from "react-icons/cg";
 
+import { BiPodcast } from "react-icons/bi";
 
 export type routeType = {
     title: string,
@@ -37,14 +39,19 @@ export const routes :routeType[] = [
         title: "My Page",
         items:[
             {
-                name: "Appearance",
+                name: "Overview",
                 href: "/dashboard/page",
+                icon:BiPodcast
+            },
+            {
+                name: "Appearance",
+                href: "/dashboard/page/appearance",
                 icon:TbLayout2
             },
             {
-                name: "Links",
-                href: "/dashboard/page/links",
-                icon:IoLinkSharp
+                name: "Feed",
+                href: "/dashboard/page/feed",
+                icon:CgFeed
             },
             {
                 name: "Analytics",
