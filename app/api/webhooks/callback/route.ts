@@ -3,14 +3,13 @@ import { NextResponse } from "next/server";
 import dbConnect from "src/lib/dbConnect";
 import Temp from "src/models/temp";
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
     try {
     
         await dbConnect();
-        const res = await request.json();
-        console.log(res);
+     
         await Temp.create({
-            request: res
+            request: request
         });
         
 
