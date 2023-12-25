@@ -7,10 +7,9 @@ export async function GET(request: Request) {
     try {
     
         await dbConnect();
-        const res = await request.json();
-        console.log(res);
+     
         await Temp.create({
-            request: res
+            request: request
         });
         
 
