@@ -22,7 +22,7 @@ const quickAccess = [
     {
         title: "Page Appearance",
         description: "Change the appearance of your page",
-        link: "/dashboard/appearance",
+        link: "/dashboard/page/appearance",
         status: "available",
         icon: LuLayoutTemplate
     },

@@ -1,4 +1,4 @@
-export interface QRSettingsType {
+export type QRSettingsType  ={
     width: number
     height: number
     data: string
