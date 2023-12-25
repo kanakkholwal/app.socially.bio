@@ -15,10 +15,7 @@ export async function GET(request: Request) {
 
 
 
-        return NextResponse.json({
-            result: "success",
-            message: "request created successfully",
-        }, { status: 200 });
+        return NextResponse.json(request.headers.get('hub.challenge'));
 
     } catch (error: any) {
         return NextResponse.json({
