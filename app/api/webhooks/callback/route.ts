@@ -1,21 +1,23 @@
 
-import { NextResponse } from "next/server";
-import dbConnect from "src/lib/dbConnect";
-import Temp from "src/models/temp";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest, response: Response) {
     try {
-    
-        await dbConnect();
-     
-        await Temp.create({
-            request: request
-        });
+
+
+  
+        const url = new URL(request.url)
+
+        const mode = url.searchParams.get("hub.mode")
+        const token = url.searchParams.get("hub.verify_token")
+        const challenge = url.searchParams.get("hub.challenge")
+        console.log("mode", mode);
+        console.log("token", token);
+        console.log("challenge", challenge);
         
 
 
-
-        return NextResponse.json(request.headers.get('hub.challenge'));
+        return NextResponse.json(challenge);
 
     } catch (error: any) {
         return NextResponse.json({
