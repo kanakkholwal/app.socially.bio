@@ -32,7 +32,8 @@ export function LoginForm() {
             signIn('credentials', {
                 email: data.email,
                 password: data.password,
-                redirect: false
+                redirect: false,
+                callbackUrl:"/dashboard"
             }).then((data) => {
                 console.log(data);
                 if (data && data.ok === false) {
@@ -40,8 +41,8 @@ export function LoginForm() {
                     return;
                 }
                 else if (data && data.ok === true) {
-                    resolve(data);
                     router.push(("/dashboard"));
+                    resolve(data);
                     return;
                 }
                 resolve(data);
