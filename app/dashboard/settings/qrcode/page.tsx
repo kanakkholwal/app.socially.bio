@@ -20,55 +20,22 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import QRCodeStyling from "qr-code-styling";
 import { useEffect, useRef } from "react";
+import { useQrStore } from "./store";
 
 
 
 export default function QrCode() {
     const canvasRef = useRef<HTMLDivElement>(null); // Change HTMLElement to HTMLDivElement
     const qrCodeRef = useRef<QRCodeStyling | null>(null); // Set the type to QRCodeStyling or null
+    const getQrOptions = useQrStore((state) => {
+        console.log(state);
+        return state.getQrOptions
+    });
 
     useEffect(() => {
         if (!qrCodeRef.current && canvasRef.current) {
-            const dotsOptions = {
-                type: "extra-rounded",
-                gradient: {
-                    type: "linear",
-                    rotation: Math.PI / 2,
-                    colorStops: [{ offset: 0, color: 'blue' }, { offset: 0.5, color: 'red' }, { offset: 1, color: 'green' }]
-                },
-            };
-
-            const cornersSquareOptions = {
-                type: "extra-rounded",
-                gradient: {
-                    type: "linear",
-                    rotation: Math.PI * 0.2,
-                    colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'red' }]
-                },
-            };
-
-            const imageOptions = {
-                crossOrigin: "anonymous",
-                margin: 30
-            };
-
-            qrCodeRef.current = new QRCodeStyling({
-                width: 256,
-                height: 256,
-                data: "https://socially.bio/sociallybio",
-                image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
-                // dotsOptions,
-
-                cornersSquareOptions: {
-                    type: "extra-rounded",
-                    gradient: {
-                        type: "linear",
-                        rotation: Math.PI * 0.2,
-                        colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'red' }]
-                    },
-                },
-                imageOptions
-            });
+            const options = getQrOptions();
+            qrCodeRef.current = new QRCodeStyling(options);
 
             qrCodeRef.current.append(canvasRef.current);
         }
@@ -89,24 +56,7 @@ export default function QrCode() {
                             Main Options
                         </AccordionTrigger>
                         <AccordionContent>
-                            <div className="grid w-full gap-1.5 mb-4">
-                                <Label htmlFor="data">Data</Label>
-                                <Input id="data" type="text" variant="fluid" value={"https://socially.bio/sociallybio"} disabled />
-                            </div>
-                            <div className="grid w-full gap-2 sm:grid-cols-2 md:grid-cols-3 grid-cols-1">
-                                <div className="grid gap-1.5">
-                                    <Label htmlFor="width">Width</Label>
-                                    <Input id="width" type="number" variant="fluid" placeholder="width of QR" />
-                                </div>
-                                <div className="grid  gap-1.5">
-                                    <Label htmlFor="height">Height</Label>
-                                    <Input id="height" type="number" variant="fluid" placeholder="height of QR" />
-                                </div>
-                                <div className="grid gap-1.5">
-                                    <Label htmlFor="margin">Margin</Label>
-                                    <Input id="margin" type="number" variant="fluid" placeholder="margin of QR" />
-                                </div>
-                            </div>
+                            <MainOptionsSelector />
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="dot-options">
@@ -114,47 +64,40 @@ export default function QrCode() {
                             Dot Options
                         </AccordionTrigger>
                         <AccordionContent>
-                            <div className="grid w-full gap-1.5 p-2">
-                                <Label htmlFor="dotStyle">Dots Style</Label>
-                                <Select >
-                                    <SelectTrigger className="w-[180px]" id="dotStyle">
-                                        <SelectValue placeholder="Select one" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {["dots", "rounded", "classy", "classy-rounded", "square", "extra-rounded"].map((item) => {
-                                            return <SelectItem value={item} key={item}>{item.replace("-", " ")}</SelectItem>
-                                        })}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <ColorSelector id="dot" color="red" gradient={{
-                                type: "linear",
-                                rotation: Math.PI / 2,
-                                colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'green' }]
-                            }} />
+                            <DotOptionsSelector />
+                        </AccordionContent>
+                    </AccordionItem>
+
+                    <AccordionItem value="corner-square-options">
+                        <AccordionTrigger>
+                            Corner Square Options
+                        </AccordionTrigger>
+                        <AccordionContent className="grid gap-3 p-2">
+                            <CornersSquareSelector />
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="corner-dot-options">
+                        <AccordionTrigger>
+                            Corner Square Options
+                        </AccordionTrigger>
+                        <AccordionContent className="grid gap-3 p-2">
+                            <CornersSquareSelector />
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="background-options">
+                        <AccordionTrigger>
+                            Background Options
+                        </AccordionTrigger>
+                        <AccordionContent className="grid gap-3 p-2">
+                            <BackgroundOptionSelctor />
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="image-options">
                         <AccordionTrigger>
                             Image Options
                         </AccordionTrigger>
-                        <AccordionContent className="grid gap-3">
-                            <div className="flex items-center w-full gap-2 justify-between">
-                                <Label htmlFor="hide-background-dots">
-                                    Hide Background Dots
-                                </Label>
-                                <Switch id="hide-background-dots" />
-                            </div>
-                            <div className="grid w-full gap-2">
-                                <Label htmlFor="hide-background-dots">
-                                    Image Size
-                                </Label>
-                                <Slider defaultValue={[0.2]} max={1} step={0.1} />
-                            </div>
-                            <div className="grid w-full grid-cols-2 items-center gap-1.5">
-                                <Label htmlFor="margin">Margin</Label>
-                                <Input id="margin" type="number" variant="fluid" placeholder="margin of QR" />
-                            </div>
+                        <AccordionContent className="grid gap-3 p-2">
+                            <ImageOptionSelector />
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
@@ -232,4 +175,138 @@ function ColorSelector({ id, color, gradient }: {
         </>}
 
     </div>)
+}
+function MainOptionsSelector() {
+    return (<>
+        <div className="grid w-full gap-1.5 mb-4">
+            <Label htmlFor="data">Data</Label>
+            <Input id="data" type="text" variant="fluid" value={"https://socially.bio/sociallybio"} disabled />
+        </div>
+        <div className="grid w-full gap-2 sm:grid-cols-2 md:grid-cols-3 grid-cols-1">
+            <div className="grid gap-1.5">
+                <Label htmlFor="width">Width</Label>
+                <Input id="width" type="number" variant="fluid" placeholder="width of QR" />
+            </div>
+            <div className="grid  gap-1.5">
+                <Label htmlFor="height">Height</Label>
+                <Input id="height" type="number" variant="fluid" placeholder="height of QR" />
+            </div>
+            <div className="grid gap-1.5">
+                <Label htmlFor="margin">Margin</Label>
+                <Input id="margin" type="number" variant="fluid" placeholder="margin of QR" />
+            </div>
+        </div>
+    </>)
+}
+function DotOptionsSelector() {
+
+    return (<>
+        <div className="grid w-full gap-1.5 p-2">
+            <Label htmlFor="dotStyle">Dots Style</Label>
+            <Select >
+                <SelectTrigger className="w-[180px]" id="dotStyle">
+                    <SelectValue placeholder="Select one" />
+                </SelectTrigger>
+                <SelectContent>
+                    {["dots", "rounded", "classy", "classy-rounded", "square", "extra-rounded"].map((item) => {
+                        return <SelectItem value={item} key={item}>{item.replace("-", " ")}</SelectItem>
+                    })}
+                </SelectContent>
+            </Select>
+        </div>
+        <ColorSelector id="dot" color="red" gradient={{
+            type: "linear",
+            rotation: Math.PI / 2,
+            colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'green' }]
+        }} />
+    </>)
+}
+function ImageOptionSelector() {
+
+    return (<>
+        <div className="flex items-center w-full gap-2 justify-between">
+            <Label htmlFor="hide-background-dots">
+                Hide Background Dots
+            </Label>
+            <Switch id="hide-background-dots" />
+        </div>
+        <div className="grid w-full gap-2">
+            <Label htmlFor="hide-background-dots">
+                Image Size
+            </Label>
+            <Slider defaultValue={[0.2]} max={1} step={0.1} />
+        </div>
+        <div className="grid w-full grid-cols-2 items-center gap-1.5">
+            <Label htmlFor="margin">Margin</Label>
+            <Input id="margin" type="number" variant="fluid" placeholder="margin of QR" />
+        </div>
+    </>)
+}
+function CornersSquareSelector() {
+
+    return (<>
+        <div className="grid w-full gap-1.5 p-2">
+            <Label htmlFor="dotStyle">Dots Style</Label>
+            <Select >
+                <SelectTrigger className="w-[180px]" id="dotStyle">
+                    <SelectValue placeholder="Select one" />
+                </SelectTrigger>
+                <SelectContent>
+                    {["dots", "rounded", "classy", "classy-rounded", "square", "extra-rounded"].map((item) => {
+                        return <SelectItem value={item} key={item}>{item.replace("-", " ")}</SelectItem>
+                    })}
+                </SelectContent>
+            </Select>
+        </div>
+        <ColorSelector id="dot" color="red" gradient={{
+            type: "linear",
+            rotation: Math.PI / 2,
+            colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'green' }]
+        }} />
+    </>)
+}
+function CornersDotSelector() {
+
+    return (<>
+        <div className="grid w-full gap-1.5 p-2">
+            <Label htmlFor="dotStyle">Dots Style</Label>
+            <Select >
+                <SelectTrigger className="w-[180px]" id="dotStyle">
+                    <SelectValue placeholder="Select one" />
+                </SelectTrigger>
+                <SelectContent>
+                    {["dots", "rounded", "classy", "classy-rounded", "square", "extra-rounded"].map((item) => {
+                        return <SelectItem value={item} key={item}>{item.replace("-", " ")}</SelectItem>
+                    })}
+                </SelectContent>
+            </Select>
+        </div>
+        <ColorSelector id="dot" color="red" gradient={{
+            type: "linear",
+            rotation: Math.PI / 2,
+            colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'green' }]
+        }} />
+    </>)
+}
+function BackgroundOptionSelctor() {
+    return (<>
+        <div className="grid w-full gap-1.5 p-2">
+            <Label htmlFor="dotStyle">Dots Style</Label>
+            <Select >
+                <SelectTrigger className="w-[180px]" id="dotStyle">
+                    <SelectValue placeholder="Select one" />
+                </SelectTrigger>
+                <SelectContent>
+                    {["dots", "rounded", "classy", "classy-rounded", "square", "extra-rounded"].map((item) => {
+                        return <SelectItem value={item} key={item}>{item.replace("-", " ")}</SelectItem>
+                    })}
+                </SelectContent>
+            </Select>
+        </div>
+        <ColorSelector id="dot" color="red" gradient={{
+            type: "linear",
+            rotation: Math.PI / 2,
+            colorStops: [{ offset: 0, color: 'blue' }, { offset: 1, color: 'green' }]
+        }} />
+    </>)
 }
