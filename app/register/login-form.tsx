@@ -33,7 +33,6 @@ export function LoginForm() {
                 email: data.email,
                 password: data.password,
                 redirect: false,
-                callbackUrl:"/dashboard"
             }).then((data) => {
                 console.log(data);
                 if (data && data.ok === false) {
