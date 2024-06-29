@@ -17,7 +17,7 @@ export default function Item({ link }: {
 
 
     return (
-    <div className="flex flex-row justify-between items-center gap-3 flex-wrap mt-5 p-4 max-w-full bg-slate-100 group rounded-lg border-transparent border border-dashed hover:border-tertiary/95 hover:bg-tertiary/10">
+    <div className="flex flex-row justify-between items-center gap-3 flex-wrap mt-5 p-4 max-w-full group rounded-lg border-transparent border border-dashed hover:border-tertiary/95 bg-white shadow">
         <div className="flex flex-col shrink max-w-full">
             <h6 className="text-md font-semibold text-slate-900 flex flex-row items-center gap-2 text-pretty">
                 {link.passwordProtected ? <MdLockOutline className="inline-block text-md  text-green-300 group-hover:text-green-600" /> : <MdLockOpen className="inline-block text-md text-primary/50 group-hover:text-primary" />}

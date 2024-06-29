@@ -32,7 +32,7 @@ export default async function Layout({ children }: {
         return redirect("/")
     }
 
-    return (<div className={"w-full min-h-screen h-full relative flex items-stretch bg-white " + font.className}>
+    return (<div className={"w-full min-h-screen h-full relative flex items-stretch " + font.className}>
         <Sidenav />
         <div className="flex-1 min-h-screen w-full p-0">
             <Navbar user={session.user} />

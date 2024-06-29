@@ -57,12 +57,11 @@ export default function DashboardPage() {
             <p className="text-md font-regular  mt-5">
                 Welcome to your dashboard!
             </p>
-            <div className="grid grid-rows-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4 ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 p-4 w-full">
 
                 {quickAccess.map((item, index) => {
                     return (<Link href={item.link} key={index} className={(item.status !== "available" ? "cursor-not-allowed pointer-events-none" : "")} >
-                        <Card
-                        className={"shadow-[0px_9px_20px] rouned-xl group  shadow-slate-200 hover:border-primary hover:shadow-primary/20" + (item.status !== "available" ? "cursor-not-allowed pointer-events-none" : "")}
+                        <Card className={"rounded-xl group hover:border-primary " + (item.status !== "available" ? "cursor-not-allowed pointer-events-none" : "")}
                         >
                             <CardHeader className="flex gap-3 flex-row items-stretch">
                                 <div className="bg-tertiary/20 rounded-full p-3 h-16 w-16 flex items-center justify-center group-hover:bg-primary/20">
